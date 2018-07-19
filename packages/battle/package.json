@@ -4,8 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}'",
-    "fix": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
     "pretest": "npm run lint",
     "test": "jest"
   },
