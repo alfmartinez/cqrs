@@ -33,6 +33,10 @@ export class ExperienceGained {
         this.amount = amount;
         this.characterId = characterId;
     }
+
+    public getAggregateId() {
+        return this.characterId;
+    }
 }
 
 export class LevelGained {
@@ -40,6 +44,10 @@ export class LevelGained {
 
     constructor(characterId: CharacterId) {
         this.characterId = characterId;
+    }
+
+    public getAggregateId() {
+        return this.characterId;
     }
 }
 
@@ -54,6 +62,10 @@ export class CharacterCreated {
         this.name = name;
         this.className = className;
         this.characterId = characterId;
+    }
+
+    public getAggregateId() {
+        return this.characterId;
     }
 }
 
