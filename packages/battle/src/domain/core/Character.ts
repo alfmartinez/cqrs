@@ -3,6 +3,9 @@ import {UserId} from "../UserId";
 
 export class CharacterCreated {
     public userId: UserId;
+    constructor(userId: UserId) {
+        this.userId = userId;
+    }
 }
 
 export class Character {
