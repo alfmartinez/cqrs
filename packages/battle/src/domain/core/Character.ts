@@ -26,9 +26,20 @@ export interface ICharacterState {
 }
 
 export class ExperienceGained {
+    public characterId: CharacterId;
     public amount: number;
-    constructor(amount: number) {
+
+    constructor(characterId: CharacterId, amount: number) {
         this.amount = amount;
+        this.characterId = characterId;
+    }
+}
+
+export class LevelGained {
+    public characterId: CharacterId;
+
+    constructor(characterId: CharacterId) {
+        this.characterId = characterId;
     }
 }
 
@@ -63,7 +74,19 @@ export class Character {
             .register(ExperienceGained, function experienceGained(event) {
                 this.exp += event.amount;
             })
+            .register(LevelGained, function levelGained(event) {
+                this.level++;
+                this.nextLevel += this.level * 1000;
+            })
             .apply(events);
+    }
+
+    public gainExperience(publishEvent: (evt) => any, amount: number) {
+        const characterId = this.projection.state.id;
+        publishEvent(new ExperienceGained(characterId, amount));
+        if (this.projection.state.exp + amount >= this.projection.state.nextLevel) {
+            publishEvent(new LevelGained(characterId));
+        }
     }
 }
 

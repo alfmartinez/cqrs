@@ -1,5 +1,8 @@
 import {UserId} from "../../UserId";
-import {Character, CharacterCreated, CharacterId, create, ExperienceGained, ICharacterState} from "../Character";
+import {
+    Character, CharacterCreated, CharacterId, create, ExperienceGained, ICharacterState,
+    LevelGained,
+} from "../Character";
 
 describe("Character Aggregate", () => {
 
@@ -39,9 +42,9 @@ describe("Character Aggregate", () => {
         });
     });
 
-    it("should gain experience", () => {
+    it("Given ExperienceGained, amount should be added to exp", () => {
         const created = new CharacterCreated(id, userId, name, className);
-        const gainedExperience  = new ExperienceGained(1);
+        const gainedExperience  = new ExperienceGained(id, 1);
         const character = new Character([created, gainedExperience]);
         expect(character.projection.state).toEqual({
             className,
@@ -52,6 +55,45 @@ describe("Character Aggregate", () => {
             nextLevel,
             userId,
         });
+    });
+
+    it("Given LevelGained, level should be increased", () => {
+        const created = new CharacterCreated(id, userId, name, className);
+        const gainedExperience  = new ExperienceGained(id, 1001);
+        const levelGained = new LevelGained(id);
+        const character = new Character([created, gainedExperience, levelGained]);
+        expect(character.projection.state).toEqual({
+            className,
+            exp: 1001,
+            id,
+            level: 2,
+            name,
+            nextLevel: 3000,
+            userId,
+        });
+    });
+
+    it("When gainExperience method is called, Then ExperienceGained should be published", () => {
+        const created = new CharacterCreated(id, userId, name, className);
+        const gainedExperience  = new ExperienceGained(id, 1);
+        const character = new Character([created, gainedExperience]);
+        character.gainExperience(publishEvent, 50);
+        expect(eventsRaised.length).toBe(1);
+        const expectedEvent = new ExperienceGained(id, 50);
+        expect(eventsRaised[0]).toEqual(expectedEvent);
+    });
+
+    it("When gainExperience method is called with a sufficient amount to advance level,"
+        + " Then ExperienceGained should be published and LevelGained", () => {
+        const created = new CharacterCreated(id, userId, name, className);
+        const gainedExperience  = new ExperienceGained(id, 990);
+        const character = new Character([created, gainedExperience]);
+        character.gainExperience(publishEvent, 50);
+        expect(eventsRaised.length).toBe(2);
+        const expectedXpEvent = new ExperienceGained(id, 50);
+        expect(eventsRaised[0]).toEqual(expectedXpEvent);
+        const expectedLevelEvent = new LevelGained(id);
+        expect(eventsRaised[1]).toEqual(expectedLevelEvent);
     });
 
 });
