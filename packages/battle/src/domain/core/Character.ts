@@ -1,3 +1,4 @@
+import IdGenerator from "../../IdGenerator";
 import {ValueType} from "../../ValueType";
 import {DecisionProjection} from "../DecisionProjection";
 import {UserId} from "../UserId";
@@ -19,6 +20,16 @@ export interface ICharacterState {
     userId: UserId;
     name: string;
     className: string;
+    level: number;
+    exp: number;
+    nextLevel: number;
+}
+
+export class ExperienceGained {
+    public amount: number;
+    constructor(amount: number) {
+        this.amount = amount;
+    }
 }
 
 export class CharacterCreated {
@@ -45,7 +56,20 @@ export class Character {
                 this.name = event.name;
                 this.className = event.className;
                 this.id = event.characterId;
+                this.level = 1;
+                this.exp = 0;
+                this.nextLevel = 1000;
+            })
+            .register(ExperienceGained, function experienceGained(event) {
+                this.exp += event.amount;
             })
             .apply(events);
     }
+}
+
+export function create(publishEvent, userId, name, className) {
+    const characterId = new CharacterId(IdGenerator.generate());
+    const createdEvent = new CharacterCreated(characterId, userId, name, className);
+    publishEvent(createdEvent);
+    return characterId;
 }

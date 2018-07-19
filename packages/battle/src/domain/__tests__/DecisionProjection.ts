@@ -10,6 +10,8 @@ class EventB {
 
 class State {
     public isCalled: boolean = false;
+    public userId: string;
+    public valueB: string;
 }
 
 describe("DecisionProjection", () => {
