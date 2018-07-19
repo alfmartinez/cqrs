@@ -1,11 +1,7 @@
 export class DecisionProjection<T> {
 
-    public state: T;
+    public state: T = {} as T;
     private handlers: any = {};
-
-    constructor(state: T) {
-        this.state = state;
-    }
 
     public register(eventType, action): DecisionProjection<T> {
         this.handlers[eventType.name] = action;
@@ -14,7 +10,7 @@ export class DecisionProjection<T> {
 
     public apply(events): DecisionProjection<T> {
         if (events instanceof Array) {
-            events.forEach(this.apply);
+            events.forEach((singleEvent: any) => this.apply.call(this, singleEvent));
             return this;
         }
 
