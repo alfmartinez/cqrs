@@ -5,6 +5,7 @@ class AggregateId extends ValueType {
     private aggregateId: string;
 
     constructor(id: string) {
+        super();
         this.aggregateId = id;
     }
 
@@ -15,8 +16,10 @@ class AggregateId extends ValueType {
 
 class Event {
     public aggregateId: AggregateId;
-    constructor(aggregateId) {
+    public num: number;
+    constructor(aggregateId, num = 0) {
         this.aggregateId = aggregateId;
+        this.num = num;
     }
     public getAggregateId() {
         return this.aggregateId;
@@ -47,7 +50,7 @@ describe("EventStore", () => {
         const otherAggregateId = new AggregateId("AggregateB");
         eventsStore.store(new Event(aggregateId));
         eventsStore.store(new Event(otherAggregateId));
-        eventsStore.store(new Event(aggregateId));
+        eventsStore.store(new Event(aggregateId, 1));
 
         const result = eventsStore.getEventsOfAggregate(aggregateId);
         expect(result.length).toBe(2);

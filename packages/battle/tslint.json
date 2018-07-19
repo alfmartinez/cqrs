@@ -12,6 +12,11 @@
       true,
       "allow-declarations",
       "allow-named-functions"
+    ],
+    "no-console": [
+      true,
+      "log",
+      "error"
     ]
   },
   "rulesDirectory": []
