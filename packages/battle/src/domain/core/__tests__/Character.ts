@@ -1,6 +1,6 @@
 import {UserId} from "../../UserId";
 import {
-    Character, CharacterCreated, CharacterId, create, ExperienceGained, ICharacterState,
+    Character, CharacterCreated, CharacterId, createCharacter, ExperienceGained, ICharacterState,
     LevelGained,
 } from "../Character";
 
@@ -114,7 +114,7 @@ describe("Character factory", () => {
     });
 
     it("should return characterId and publishes event", () => {
-        const actual = create(publishEvent, userId, name, className);
+        const actual = createCharacter(publishEvent, userId, name, className);
         expect(actual).toBeInstanceOf(CharacterId);
         expect(eventsRaised.length).toBe(1);
         const event = eventsRaised[0];

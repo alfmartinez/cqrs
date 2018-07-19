@@ -74,7 +74,7 @@ export class Character {
 
     constructor(events: any[]) {
         this.projection
-            .register(CharacterCreated, function createCharacter(event) {
+            .register(CharacterCreated, function applyCharacterCreated(event) {
                 this.userId = event.userId;
                 this.name = event.name;
                 this.className = event.className;
@@ -83,7 +83,7 @@ export class Character {
                 this.exp = 0;
                 this.nextLevel = 1000;
             })
-            .register(ExperienceGained, function experienceGained(event) {
+            .register(ExperienceGained, function applyExperienceGained(event) {
                 this.exp += event.amount;
             })
             .register(LevelGained, function levelGained(event) {
@@ -102,7 +102,7 @@ export class Character {
     }
 }
 
-export function create(publishEvent, userId, name, className) {
+export function createCharacter(publishEvent, userId, name, className) {
     const characterId = new CharacterId(IdGenerator.generate());
     const createdEvent = new CharacterCreated(characterId, userId, name, className);
     publishEvent(createdEvent);

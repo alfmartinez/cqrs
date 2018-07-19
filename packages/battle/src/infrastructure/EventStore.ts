@@ -8,7 +8,7 @@ export class EventDontContainsAggregateId implements Error {
 export class EventStore {
     public events: any[] = [];
 
-    public store(event) {
+    public store = (event) => {
         if (!event.getAggregateId) {
             throw new EventDontContainsAggregateId(event.constructor.name);
         }
