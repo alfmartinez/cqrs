@@ -95,10 +95,24 @@ export class Character {
 
     public gainExperience(publishEvent: (evt) => any, amount: number) {
         const characterId = this.projection.state.id;
-        publishEvent(new ExperienceGained(characterId, amount));
-        if (this.projection.state.exp + amount >= this.projection.state.nextLevel) {
-            publishEvent(new LevelGained(characterId));
+        const experienceGained = new ExperienceGained(characterId, amount);
+        publishEvent(experienceGained);
+        this.projection.apply(experienceGained);
+        let levelGained;
+        do {
+            levelGained = this.checkLevelGained(publishEvent, characterId);
         }
+        while (levelGained);
+    }
+
+    private checkLevelGained(publishEvent: (evt) => any, characterId: CharacterId) {
+        if (this.projection.state.exp >= this.projection.state.nextLevel) {
+            const levelGained = new LevelGained(characterId);
+            this.projection.apply(levelGained);
+            publishEvent(levelGained);
+            return true;
+        }
+        return false;
     }
 }
 
