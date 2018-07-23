@@ -1,4 +1,4 @@
-import {Equipment, EquipmentLevel, EquipmentUpgraded, ItemEquipped} from "../../src/domain/Equipment";
+import {Equipment, EquipmentLevel, EquipmentUpgraded, ItemEquipped, SlotNotEquipped} from "../../src/domain/Equipment";
 import {CharacterId, CharacterCreated} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
 import {Item} from "../../src/domain/Item";
@@ -61,6 +61,21 @@ describe('Equipment', () => {
 
         const upgradeEvent = new EquipmentUpgraded(characterId,1);
         expect(eventsRaised).toContainEqual(upgradeEvent);
+
+    })
+
+    it('should throw if not all slots are equipped', () => {
+        const events: any[] = [createdEvent];
+        [0,1,3,4,5].forEach((slotNumber) => {
+            events.push(new ItemEquipped(characterId, slotNumber));
+        });
+
+        equipment = new Equipment(events);
+        expect(() => equipment.upgrade(publishEvent)).toThrow(SlotNotEquipped(2));
+
+
+        const upgradeEvent = new EquipmentUpgraded(characterId,1);
+        expect(eventsRaised).not.toContainEqual(upgradeEvent);
 
     })
 })

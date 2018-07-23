@@ -1,6 +1,7 @@
 import {DecisionProjection} from "@cqrs-alf/common";
 import {CharacterCreated, CharacterId} from "@fubattle/character";
 import {createItemSet} from "./ItemSet";
+import {Slot} from "./Slot";
 
 export enum EquipmentLevel {
     WHITE,
@@ -20,6 +21,17 @@ interface IEquipment {
     className: string;
     level: number;
     slots: any[];
+}
+
+export class SlotNotEquipped implements Error {
+    public name: string = "SlotNotEquipped";
+    public message: string;
+    public slot: number;
+
+    constructor(slot: number) {
+        this.slot = slot;
+        this.message = `Slots ${slot} not equipped`;
+    }
 }
 
 export class ItemEquipped {
@@ -69,6 +81,11 @@ export class Equipment {
     }
 
     public upgrade(publishEvent: (evt: any) => void) {
+        const unequippedSlot: Slot = this.projection.state.slots.find((slot: Slot) => !slot.equipped);
+        if (unequippedSlot) {
+            const {index} = unequippedSlot;
+            throw new SlotNotEquipped(index);
+        }
         const upgradeEvent = new EquipmentUpgraded(this.projection.state.characterId, this.projection.state.level + 1);
         this.projection.apply(upgradeEvent);
         publishEvent(upgradeEvent);
