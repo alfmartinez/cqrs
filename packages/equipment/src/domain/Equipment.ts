@@ -32,6 +32,16 @@ export class ItemEquipped {
     }
 }
 
+export class EquipmentUpgraded {
+    public characterId: CharacterId;
+    public level: EquipmentLevel;
+
+    constructor(characterId: CharacterId, level: EquipmentLevel) {
+        this.characterId = characterId;
+        this.level = level;
+    }
+}
+
 export class Equipment {
     private projection = new DecisionProjection<IEquipment>();
 
@@ -53,8 +63,14 @@ export class Equipment {
         if (this.projection.state.slots[slotNumber].equipped) {
             return;
         }
-        const evt = new ItemEquipped(this.projection.state.characterId, slotNumber);
-        this.projection.apply(evt);
-        publishEvent(evt);
+        const equipEvent = new ItemEquipped(this.projection.state.characterId, slotNumber);
+        this.projection.apply(equipEvent);
+        publishEvent(equipEvent);
+    }
+
+    public upgrade(publishEvent: (evt: any) => void) {
+        const upgradeEvent = new EquipmentUpgraded(this.projection.state.characterId, this.projection.state.level + 1);
+        this.projection.apply(upgradeEvent);
+        publishEvent(upgradeEvent);
     }
 }
