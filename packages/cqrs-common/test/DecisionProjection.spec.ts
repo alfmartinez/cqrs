@@ -1,4 +1,4 @@
-import {DecisionProjection} from "../DecisionProjection";
+import {DecisionProjection} from "./DecisionProjection";
 
 class EventA {
     public userId = "UserA";
@@ -20,7 +20,7 @@ describe("DecisionProjection", () => {
     it("When register Event Then call action on apply of this event", () => {
 
         projection.register(EventA,  function setCalled() {
-            this.isCalled = true;
+            (<State>this).isCalled = true;
         }).apply(new EventA());
 
         expect(projection.state.isCalled).toBe(true);
@@ -28,9 +28,9 @@ describe("DecisionProjection", () => {
 
     it("Given several event registered When apply Then call good handler for each event", () => {
         projection.register(EventA, function setUserId(event) {
-            this.userId = event.userId;
+            (<State>this).userId = event.userId;
         }).register(EventB, function setValueB(event) {
-            this.valueB = event.valueB;
+            (<State>this).valueB = event.valueB;
         }).apply([new EventA(), new EventB()]);
 
         expect(projection.state.userId).toBe("UserA");

@@ -1,5 +1,6 @@
-import {ValueType} from "../../ValueType";
-import {EventDontContainsAggregateId, EventStore} from "../EventStore";
+import {EventStore} from "./EventStore";
+import {ValueType} from "./ValueType";
+import {EventDontContainAggregateId} from "./EventDontContainAggregateId";
 
 class AggregateId extends ValueType {
     private aggregateId: string;
@@ -61,6 +62,6 @@ describe("EventStore", () => {
     it("When store event with no aggregateId, throw", () => {
         expect(() => {
             eventsStore.store(new BadEvent());
-        }).toThrow(EventDontContainsAggregateId);
+        }).toThrow(EventDontContainAggregateId);
     });
 });
