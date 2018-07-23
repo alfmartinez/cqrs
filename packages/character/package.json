@@ -1,7 +1,7 @@
 {
-  "name": "@cqrs-alf/example",
+  "name": "@fubattle/character",
   "version": "1.0.0",
-  "description": "Example of CQRS Usage",
+  "description": "Character Domain",
   "main": "index.js",
   "scripts": {
     "build": "rimraf dist/ && tsc",

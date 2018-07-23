@@ -2,8 +2,8 @@ import {EventStore} from "@cqrs-alf/common";
 import {Character, CharacterId} from "../domain/Character";
 
 export class UnknownCharacter implements Error {
-    name: string = "UnknownCharacter";
-    message: string;
+    public name: string = "UnknownCharacter";
+    public message: string;
 
     constructor(message: string = "Unknown Character") {
         this.message = message;

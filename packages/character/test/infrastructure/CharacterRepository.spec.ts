@@ -1,6 +1,6 @@
 import {EventStore} from "@cqrs-alf/common";
 import {Character, CharacterCreated, CharacterId, ExperienceGained, LevelGained} from "../../src/domain/Character";
-import {UserId} from "../../../user/src/domain/UserId";
+import {UserId} from "@fubattle/user";
 import {CharacterRepository, UnknownCharacter} from "../../src/infrastructure/CharacterRepository";
 
 describe("CharacterRepository", () => {

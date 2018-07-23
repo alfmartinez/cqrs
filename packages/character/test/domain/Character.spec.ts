@@ -1,4 +1,4 @@
-import {UserId} from "../../../user/src/domain/UserId";
+import {UserId} from "@fubattle/user";
 import {
     Character, CharacterCreated, CharacterId, createCharacter, ExperienceGained,
     LevelGained,

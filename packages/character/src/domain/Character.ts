@@ -1,4 +1,4 @@
-import {ValueType, DecisionProjection, IdGenerator} from "@cqrs-alf/common";
+import {DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
 import {UserId} from "@fubattle/user";
 
 export class CharacterId extends ValueType {

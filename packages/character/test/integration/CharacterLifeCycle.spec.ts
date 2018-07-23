@@ -1,16 +1,16 @@
 import {EventPublisher} from "@cqrs-alf/common";
 import {EventStore} from "@cqrs-alf/common";
 import {Character, createCharacter} from "../../src/domain/Character";
-import {UserId} from "../../../user/src/domain/UserId";
+import {UserId} from "@fubattle/user";
 import {CharacterRepository} from "../../src/infrastructure/CharacterRepository";
 
 describe("CharacterLifeCycle", () => {
 
     const eventPublisher: EventPublisher = new EventPublisher();
-    const characterRepository: CharacterRepository;
+    let characterRepository: CharacterRepository;
     const userId = new UserId("lc");
     const publishEvent = eventPublisher.publish;
-    const eventStore: EventStore;
+    let eventStore: EventStore;
 
     beforeEach(() => {
         eventStore = new EventStore();
@@ -22,7 +22,6 @@ describe("CharacterLifeCycle", () => {
         const characterId = createCharacter(publishEvent, userId, "Zbra", "JungleFist");
         let character: Character = characterRepository.getCharacter(characterId);
         character.gainExperience(publishEvent, 600);
-        const character = characterRepository.getCharacter(characterId);
         character.gainExperience(publishEvent, 401);
 
         const updatedCharacter = characterRepository.getCharacter(characterId);
