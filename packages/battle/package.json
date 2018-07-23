@@ -9,8 +9,16 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "author": "Alexandre Martinez <alexandre.martinez76@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://git@github.com:alfmartinez/cqrs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alfmartinez/cqrs/issues"
+  },
+  "homepage": "https://github.com/alfmartinez/cqrs/tree/master/packages/cqrs-common",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^23.3.0",
     "events": "^3.0.0",
