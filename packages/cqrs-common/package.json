@@ -15,6 +15,10 @@
     "type": "git",
     "url": "git+https://git@github.com:alfmartinez/cqrs.git"
   },
+  "bugs": {
+    "url": "https://github.com/alfmartinez/cqrs/issues"
+  },
+  "homepage": "https://github.com/alfmartinez/cqrs/tree/master/packages/cqrs-common",
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^23.3.0",
