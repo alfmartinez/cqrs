@@ -23,12 +23,16 @@
   "devDependencies": {
     "@types/jest": "^23.3.0",
     "jest": "^23.4.1",
+    "jest-each": "^23.4.0",
     "ts-jest": "^23.0.1",
     "typescript": "^2.9.2"
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": ["json", "html"],
+    "coverageReporters": [
+      "json",
+      "html"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
