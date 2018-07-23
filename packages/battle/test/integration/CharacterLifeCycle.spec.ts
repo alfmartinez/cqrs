@@ -1,5 +1,5 @@
-import {EventPublisher} from "@cqrs/common";
-import {EventStore} from "@cqrs/common";
+import {EventPublisher} from "@cqrs-alf/common";
+import {EventStore} from "@cqrs-alf/common";
 import {Character, createCharacter} from "../../src/domain/core/Character";
 import {UserId} from "../../src/domain/UserId";
 import {CharacterRepository} from "../../src/infrastructure/CharacterRepository";

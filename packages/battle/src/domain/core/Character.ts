@@ -1,5 +1,5 @@
-import {ValueType} from "@cqrs/common";
-import {DecisionProjection} from "@cqrs/common";
+import {ValueType} from "@cqrs-alf/common";
+import {DecisionProjection} from "@cqrs-alf/common";
 import IdGenerator from "../../IdGenerator";
 import {UserId} from "../UserId";
 

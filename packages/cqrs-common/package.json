@@ -1,7 +1,7 @@
 {
-  "name": "@cqrs/common",
+  "name": "@cqrs-alf/common",
   "version": "1.0.0",
-  "description": "",
+  "description": "Standard CQRS implementations",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -19,7 +19,7 @@
     "url": "https://github.com/alfmartinez/cqrs/issues"
   },
   "homepage": "https://github.com/alfmartinez/cqrs/tree/master/packages/cqrs-common",
-  "license": "ISC",
+  "license": "MIT",
   "devDependencies": {
     "@types/jest": "^23.3.0",
     "jest": "^23.4.1",

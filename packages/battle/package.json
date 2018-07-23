@@ -1,7 +1,7 @@
 {
-  "name": "battle",
+  "name": "@cqrs-alf/example",
   "version": "1.0.0",
-  "description": "",
+  "description": "Example of CQRS Usage",
   "main": "index.js",
   "scripts": {
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
@@ -17,7 +17,7 @@
     "jest": "^23.4.1",
     "ts-jest": "^23.0.1",
     "typescript": "^2.9.2",
-    "@cqrs/common": "1.0.0"
+    "@cqrs-alf/common": "1.0.0"
   },
   "jest": {
     "collectCoverage": true,

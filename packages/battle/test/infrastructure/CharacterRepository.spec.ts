@@ -1,4 +1,4 @@
-import {EventStore} from "../../../cqrs-common/src/EventStore";
+import {EventStore} from "@cqrs-alf/common";
 import {Character, CharacterCreated, CharacterId, ExperienceGained, LevelGained} from "../../src/domain/core/Character";
 import {UserId} from "../../src/domain/UserId";
 import {CharacterRepository, UnknownCharacter} from "../../src/infrastructure/CharacterRepository";

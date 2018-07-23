@@ -1,4 +1,4 @@
-import {ValueType} from "@cqrs/common";
+import {ValueType} from "@cqrs-alf/common";
 
 export class UserEmailCannotBeEmpty implements Error {}
 
