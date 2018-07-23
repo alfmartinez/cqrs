@@ -10,7 +10,11 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "",
+  "author": "Alexandre Martinez <alexandre.martinez76@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://git@github.com:alfmartinez/cqrs.git"
+  },
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^23.3.0",
