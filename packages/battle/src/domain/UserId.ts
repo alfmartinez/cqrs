@@ -1,4 +1,4 @@
-import {ValueType} from "../ValueType";
+import {ValueType} from "@cqrs/common";
 
 export class UserEmailCannotBeEmpty implements Error {}
 
@@ -6,6 +6,7 @@ export class UserId extends ValueType {
     public email: string;
 
     constructor(email) {
+        super();
         if (!email) {
             throw new UserEmailCannotBeEmpty();
         }

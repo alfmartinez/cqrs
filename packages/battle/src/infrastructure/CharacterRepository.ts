@@ -1,5 +1,5 @@
+import {EventStore} from "@cqrs/common";
 import {Character, CharacterId} from "../domain/core/Character";
-import {EventStore} from "./EventStore";
 
 export class UnknownCharacter implements Error {}
 

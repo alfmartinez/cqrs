@@ -16,9 +16,12 @@
     "events": "^3.0.0",
     "jest": "^23.4.1",
     "ts-jest": "^23.0.1",
-    "typescript": "^2.9.2"
+    "typescript": "^2.9.2",
+    "@cqrs/common": "1.0.0"
   },
   "jest": {
+    "collectCoverage": true,
+    "coverageReporters": ["json", "html"],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -27,7 +30,7 @@
     "transform": {
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
-    "testRegex": "/__tests__/.*\\.(ts|tsx|js)$"
+    "testRegex": ".*\\.spec\\.(ts|tsx|js)$"
   },
   "dependencies": {
     "uuid": "^3.3.2"

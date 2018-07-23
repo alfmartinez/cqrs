@@ -1,12 +1,13 @@
+import {ValueType} from "@cqrs/common";
+import {DecisionProjection} from "@cqrs/common";
 import IdGenerator from "../../IdGenerator";
-import {ValueType} from "../../ValueType";
-import {DecisionProjection} from "../DecisionProjection";
 import {UserId} from "../UserId";
 
 export class CharacterId extends ValueType {
     public id: string;
 
     constructor(id: string) {
+        super();
         this.id = id;
     }
 

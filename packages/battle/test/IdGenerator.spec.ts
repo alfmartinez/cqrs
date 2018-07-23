@@ -1,4 +1,4 @@
-import IdGenerator from "../IdGenerator";
+import IdGenerator from "../src/IdGenerator";
 
 describe("idGenerator", () => {
     it("When generate several id Then return always different id", () => {

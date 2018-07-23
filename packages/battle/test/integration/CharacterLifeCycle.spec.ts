@@ -1,8 +1,8 @@
-import {Character, createCharacter} from "../../domain/core/Character";
-import {UserId} from "../../domain/UserId";
-import {CharacterRepository} from "../../infrastructure/CharacterRepository";
-import {EventPublisher} from "../../infrastructure/EventPublisher";
-import {EventStore} from "../../infrastructure/EventStore";
+import {EventPublisher} from "@cqrs/common";
+import {EventStore} from "@cqrs/common";
+import {Character, createCharacter} from "../../src/domain/core/Character";
+import {UserId} from "../../src/domain/UserId";
+import {CharacterRepository} from "../../src/infrastructure/CharacterRepository";
 
 describe("CharacterLifeCycle", () => {
 

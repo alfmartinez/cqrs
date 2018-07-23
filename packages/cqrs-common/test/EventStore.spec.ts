@@ -1,6 +1,6 @@
-import {EventStore} from "./EventStore";
-import {ValueType} from "./ValueType";
-import {EventDontContainAggregateId} from "./EventDontContainAggregateId";
+import {EventStore} from "../src/EventStore";
+import {ValueType} from "../src/ValueType";
+import {EventDontContainAggregateId} from "../src/EventDontContainAggregateId";
 
 class AggregateId extends ValueType {
     private aggregateId: string;

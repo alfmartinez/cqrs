@@ -1,4 +1,4 @@
-import {UserEmailCannotBeEmpty, UserId} from "../UserId";
+import {UserEmailCannotBeEmpty, UserId} from "../../src/domain/UserId";
 
 describe("UserId", () => {
     const email = "user@mix-it.fr";

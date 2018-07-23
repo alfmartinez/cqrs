@@ -1,4 +1,4 @@
-import {ValueType} from "./ValueType";
+import {ValueType} from "../src/ValueType";
 
 class Foo extends ValueType {
     private value: string;
@@ -21,6 +21,11 @@ describe("ValueType", () => {
         expect(valueA.equals(otherValueA)).toBeTruthy();
     });
 
+    it("should tell instance is not void", () => {
+        const valueA = new Foo("A");
+
+        expect(valueA.equals()).toBeFalsy();
+    });
 
     it("should tell two instances are not equal", () => {
         const valueA = new Foo("A");

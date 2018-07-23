@@ -1,8 +1,8 @@
-import {UserId} from "../../UserId";
+import {UserId} from "../../../src/domain/UserId";
 import {
-    Character, CharacterCreated, CharacterId, createCharacter, ExperienceGained, ICharacterState,
+    Character, CharacterCreated, CharacterId, createCharacter, ExperienceGained,
     LevelGained,
-} from "../Character";
+} from "../../../src/domain/core/Character";
 
 describe("Character Aggregate", () => {
 

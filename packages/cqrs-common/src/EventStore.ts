@@ -1,21 +1,16 @@
-export class EventDontContainsAggregateId implements Error {
-    public eventName: string;
-    constructor(eventName) {
-        this.eventName = eventName;
-    }
-}
+import {EventDontContainAggregateId} from "./EventDontContainAggregateId";
 
 export class EventStore {
     public events: any[] = [];
 
-    public store = (event) => {
+    public store = (event: any) => {
         if (!event.getAggregateId) {
-            throw new EventDontContainsAggregateId(event.constructor.name);
+            throw new EventDontContainAggregateId(event.constructor.name);
         }
         this.events.push(event);
     }
 
-    public getEventsOfAggregate(aggregateId) {
+    public getEventsOfAggregate(aggregateId: any) {
         return this.events.filter((event) => {
             return event.getAggregateId().equals(aggregateId);
         });

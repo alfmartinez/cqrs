@@ -1,7 +1,7 @@
-import {Character, CharacterCreated, CharacterId, ExperienceGained, LevelGained} from "../../domain/core/Character";
-import {UserId} from "../../domain/UserId";
-import {CharacterRepository, UnknownCharacter} from "../CharacterRepository";
-import {EventStore} from "../EventStore";
+import {EventStore} from "../../../cqrs-common/src/EventStore";
+import {Character, CharacterCreated, CharacterId, ExperienceGained, LevelGained} from "../../src/domain/core/Character";
+import {UserId} from "../../src/domain/UserId";
+import {CharacterRepository, UnknownCharacter} from "../../src/infrastructure/CharacterRepository";
 
 describe("CharacterRepository", () => {
 

@@ -1,4 +1,4 @@
-import {EventPublisher} from "./EventPublisher";
+import {EventPublisher} from "../src/EventPublisher";
 
 class EventA {
     public value: string = "Value";
