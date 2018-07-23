@@ -1,7 +1,7 @@
 {
-  "name": "@cqrs-alf/common",
+  "name": "@fubattle/user",
   "version": "1.0.0",
-  "description": "Standard CQRS implementations",
+  "description": "",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
@@ -10,35 +10,21 @@
     "test": "jest"
   },
   "keywords": [],
-  "author": "Alexandre Martinez <alexandre.martinez76@gmail.com>",
-  "repository": {
-    "type": "git",
-    "url": "git+https://git@github.com:alfmartinez/cqrs.git"
-  },
-  "bugs": {
-    "url": "https://github.com/alfmartinez/cqrs/issues"
-  },
-  "homepage": "https://github.com/alfmartinez/cqrs/tree/master/packages/cqrs-common",
+  "author": "Alexandre Martinez <alexandre.martinez76@gmail.com> (https://twitter.com/alfmartinez)",
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^23.3.0",
-    "@types/uuid": "^3.4.3",
     "jest": "^23.4.1",
     "ts-jest": "^23.0.1",
     "tslint": "^5.11.0",
     "typescript": "^2.9.2"
   },
   "dependencies": {
-    "@types/events": "^1.2.0",
-    "events": "^3.0.0",
-    "uuid": "^3.3.2"
+    "@cqrs-alf/common": "^1.0.0"
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html"
-    ],
+    "coverageReporters": ["json", "html"],
     "moduleFileExtensions": [
       "ts",
       "tsx",

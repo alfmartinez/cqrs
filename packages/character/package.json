@@ -1,12 +1,12 @@
 {
-  "name": "@cqrs-alf/common",
+  "name": "@cqrs-alf/example",
   "version": "1.0.0",
-  "description": "Standard CQRS implementations",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "Example of CQRS Usage",
+  "main": "index.js",
   "scripts": {
     "build": "rimraf dist/ && tsc",
-    "lint": "tslint -c tslint.json -p . --fix",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
+    "pretest": "npm run lint",
     "test": "jest"
   },
   "keywords": [],
@@ -22,23 +22,13 @@
   "license": "MIT",
   "devDependencies": {
     "@types/jest": "^23.3.0",
-    "@types/uuid": "^3.4.3",
     "jest": "^23.4.1",
     "ts-jest": "^23.0.1",
-    "tslint": "^5.11.0",
     "typescript": "^2.9.2"
-  },
-  "dependencies": {
-    "@types/events": "^1.2.0",
-    "events": "^3.0.0",
-    "uuid": "^3.3.2"
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": [
-      "json",
-      "html"
-    ],
+    "coverageReporters": ["json", "html"],
     "moduleFileExtensions": [
       "ts",
       "tsx",
@@ -48,5 +38,9 @@
       "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": ".*\\.spec\\.(ts|tsx|js)$"
+  },
+  "dependencies": {
+    "@cqrs-alf/common": "1.0.0",
+    "@fubattle/user": "1.0.0"
   }
 }
