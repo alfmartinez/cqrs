@@ -1,9 +1,8 @@
 {
-  "name": "@fubattle/character",
+  "name": "@fubattle/equipment",
   "version": "1.0.0",
   "description": "Character Domain",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "index.js",
   "scripts": {
     "build": "rimraf dist/ && tsc",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
@@ -42,6 +41,7 @@
   },
   "dependencies": {
     "@cqrs-alf/common": "1.0.0",
+    "@fubattle/character": "1.0.0",
     "@fubattle/user": "1.0.0"
   }
 }
