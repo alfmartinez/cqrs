@@ -9,7 +9,7 @@ export class EventPublisher {
         this.eventEmitter.emit(eventName, event);
     }
 
-    public onAny(action: (event:any) => void) {
+    public onAny(action: (event: any) => void) {
         this.eventEmitter.on("*", action);
         return this;
     }

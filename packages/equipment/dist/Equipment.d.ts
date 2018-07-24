@@ -1,3 +1,4 @@
+import { Aggregable } from "@cqrs-alf/common";
 import { CharacterId } from "@fubattle/character";
 export declare enum EquipmentLevel {
     WHITE = 0,
@@ -17,15 +18,17 @@ export declare class SlotNotEquipped implements Error {
     slot: number;
     constructor(slot: number);
 }
-export declare class ItemEquipped {
+export declare class ItemEquipped implements Aggregable {
     characterId: CharacterId;
     slot: number;
     constructor(characterId: CharacterId, slot: number);
+    getAggregateId(): any;
 }
-export declare class EquipmentUpgraded {
+export declare class EquipmentUpgraded implements Aggregable {
     characterId: CharacterId;
     level: EquipmentLevel;
     constructor(characterId: CharacterId, level: EquipmentLevel);
+    getAggregateId(): any;
 }
 export declare class Equipment {
     private projection;

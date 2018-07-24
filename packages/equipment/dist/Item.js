@@ -7,7 +7,7 @@ class Item extends common_1.ValueType {
         this.name = name;
     }
     toString() {
-        return "Item: " + name;
+        return "Item: " + this.name;
     }
 }
 exports.Item = Item;

@@ -29,12 +29,18 @@ class ItemEquipped {
         this.characterId = characterId;
         this.slot = slot;
     }
+    getAggregateId() {
+        return this.characterId;
+    }
 }
 exports.ItemEquipped = ItemEquipped;
 class EquipmentUpgraded {
     constructor(characterId, level) {
         this.characterId = characterId;
         this.level = level;
+    }
+    getAggregateId() {
+        return this.characterId;
     }
 }
 exports.EquipmentUpgraded = EquipmentUpgraded;

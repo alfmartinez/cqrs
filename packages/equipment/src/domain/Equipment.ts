@@ -1,4 +1,4 @@
-import {DecisionProjection} from "@cqrs-alf/common";
+import {Aggregable, DecisionProjection} from "@cqrs-alf/common";
 import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
 import {createItemSet} from "./ItemSet";
 import {Slot} from "./Slot";
@@ -34,7 +34,7 @@ export class SlotNotEquipped implements Error {
     }
 }
 
-export class ItemEquipped {
+export class ItemEquipped implements Aggregable {
     public characterId: CharacterId;
     public slot: number;
 
@@ -42,15 +42,23 @@ export class ItemEquipped {
         this.characterId = characterId;
         this.slot = slot;
     }
+
+    public getAggregateId(): any {
+        return this.characterId;
+    }
 }
 
-export class EquipmentUpgraded {
+export class EquipmentUpgraded implements Aggregable {
     public characterId: CharacterId;
     public level: EquipmentLevel;
 
     constructor(characterId: CharacterId, level: EquipmentLevel) {
         this.characterId = characterId;
         this.level = level;
+    }
+
+    public getAggregateId(): any {
+        return this.characterId;
     }
 }
 
@@ -69,6 +77,10 @@ export class Equipment {
                 this.slots[evt.slot].equipped = true;
             })
             .apply(events);
+    }
+
+    public getView() {
+        return this.projection.state;
     }
 
     public equipItem(publishEvent: (evt: any) => void, slotNumber: number) {
