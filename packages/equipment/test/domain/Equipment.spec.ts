@@ -3,6 +3,7 @@ import {CharacterId, CharacterCreated} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
 import {createItemSet} from "../../src/domain/ItemSet";
 import each from 'jest-each';
+import {Item} from "../../src/domain/Item";
 
 describe('Equipment', () => {
 
@@ -23,19 +24,23 @@ describe('Equipment', () => {
     it('should be created with character', () => {
         equipment = new Equipment(createdEvent);
         const expectedEquipment = createItemSet(EquipmentLevel.WHITE);
-        expect(equipment.projection.state.characterId).toEqual(characterId);
-        expect(equipment.projection.state.className).toEqual(className);
-        expect(equipment.projection.state.level).toEqual(EquipmentLevel.WHITE);
-        expect(equipment.projection.state.slots).toEqual(expectedEquipment);
+        const state = equipment.getView();
+
+        expect(state.characterId).toEqual(characterId);
+        expect(state.className).toEqual(className);
+        expect(state.level).toEqual(EquipmentLevel.WHITE);
+        expect(state.slots).toEqual(expectedEquipment);
     });
 
-    each([[0],[1],[2],[3],[4],[5]]).it('should allow equipping of item in slot %d', (slotNumber: number) => {
+    each([[0, "helmet"],[1,"knife"],[2,"buckler"],[3,"cloak"],[4,"cloth"],[5,"boots"]]).it('should allow equipping of item in slot %d', (slotNumber: number, itemName: string) => {
         equipment = new Equipment(createdEvent);
 
         equipment.equipItem(publishEvent, slotNumber);
-        expect(equipment.projection.state.slots[slotNumber].equipped).toBeTruthy();
+        const state = equipment.getView();
 
-        const expectedEvent = new ItemEquipped(characterId, slotNumber);
+        expect(state.slots[slotNumber].equipped).toBeTruthy();
+        const expectedItem = new Item(itemName);
+        const expectedEvent = new ItemEquipped(characterId, slotNumber, expectedItem);
         expect(eventsRaised).toContainEqual(expectedEvent);
     });
 
@@ -44,7 +49,8 @@ describe('Equipment', () => {
         equipment = new Equipment([createdEvent, itemEquipedEvent]);
 
         equipment.equipItem(publishEvent, slotNumber);
-        expect(equipment.projection.state.slots[slotNumber].equipped).toBeTruthy();
+        const state = equipment.getView();
+        expect(state.slots[slotNumber].equipped).toBeTruthy();
 
         expect(eventsRaised.length).toBe(0);
     });
@@ -60,7 +66,11 @@ describe('Equipment', () => {
 
         const upgradeEvent = new EquipmentUpgraded(characterId,1);
         expect(eventsRaised).toContainEqual(upgradeEvent);
-
+        const state = equipment.getView();
+        expect(state.level).toBe(EquipmentLevel.GREEN0);
+        [0,1,2,3,4,5].forEach((slotNumber) => {
+            expect(state.slots[slotNumber].equipped).toBeFalsy();
+        });
     })
 
     it('should throw if not all slots are equipped', () => {
