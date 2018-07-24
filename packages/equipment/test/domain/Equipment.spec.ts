@@ -1,15 +1,16 @@
 import {Equipment, EquipmentLevel, EquipmentUpgraded, ItemEquipped, SlotNotEquipped} from "../../src/domain/Equipment";
-import {CharacterId, CharacterCreated} from "@fubattle/character";
+import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
 import {createItemSet} from "../../src/domain/ItemSet";
 import each from 'jest-each';
-import {Item} from "../../src/domain/Item";
+import {createItem, Item} from "../../src/domain/Item";
+import {Bonus} from "../../src/domain/Bonus";
 
 describe('Equipment', () => {
 
     const characterId = new CharacterId("foo");
     const userId = new UserId("bar@baz.com");
-    const className = "Fighter";
+    const className = CharacterClass.FIGHTER;
     const createdEvent = new CharacterCreated(characterId, userId, 'testCharacter', className);
     let equipment: Equipment;
     let eventsRaised: any[];
@@ -23,7 +24,7 @@ describe('Equipment', () => {
 
     it('should be created with character', () => {
         equipment = new Equipment(createdEvent);
-        const expectedEquipment = createItemSet(EquipmentLevel.WHITE);
+        const expectedEquipment = createItemSet(EquipmentLevel.WHITE, CharacterClass.FIGHTER);
         const state = equipment.getView();
 
         expect(state.characterId).toEqual(characterId);
@@ -39,13 +40,15 @@ describe('Equipment', () => {
         const state = equipment.getView();
 
         expect(state.slots[slotNumber].equipped).toBeTruthy();
-        const expectedItem = new Item(itemName);
+        const expectedItem = createItem(slotNumber, className, EquipmentLevel.WHITE);
         const expectedEvent = new ItemEquipped(characterId, slotNumber, expectedItem);
         expect(eventsRaised).toContainEqual(expectedEvent);
     });
 
     each([[0],[1],[2],[3],[4],[5]]).it('should not equip if already equipped slot %d', (slotNumber: number) => {
-        const itemEquipedEvent = new ItemEquipped(characterId, slotNumber);
+        const bonus = new Bonus('normal','defense',1);
+        const item = new Item("helmet", bonus);
+        const itemEquipedEvent = new ItemEquipped(characterId, slotNumber, item);
         equipment = new Equipment([createdEvent, itemEquipedEvent]);
 
         equipment.equipItem(publishEvent, slotNumber);

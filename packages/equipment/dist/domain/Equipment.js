@@ -25,9 +25,10 @@ class SlotNotEquipped {
 }
 exports.SlotNotEquipped = SlotNotEquipped;
 class ItemEquipped {
-    constructor(characterId, slot) {
+    constructor(characterId, slot, item) {
         this.characterId = characterId;
         this.slot = slot;
+        this.item = item;
     }
     getAggregateId() {
         return this.characterId;
@@ -52,18 +53,26 @@ class Equipment {
             this.characterId = evt.characterId;
             this.className = evt.className;
             this.level = EquipmentLevel.WHITE;
-            this.slots = ItemSet_1.createItemSet(EquipmentLevel.WHITE);
+            this.slots = ItemSet_1.createItemSet(EquipmentLevel.WHITE, evt.className);
         })
             .register(ItemEquipped, function (evt) {
             this.slots[evt.slot].equipped = true;
         })
+            .register(EquipmentUpgraded, function (evt) {
+            this.level = evt.level;
+            this.slots = ItemSet_1.createItemSet(evt.level, this.className);
+        })
             .apply(events);
+    }
+    getView() {
+        return this.projection.state;
     }
     equipItem(publishEvent, slotNumber) {
         if (this.projection.state.slots[slotNumber].equipped) {
             return;
         }
-        const equipEvent = new ItemEquipped(this.projection.state.characterId, slotNumber);
+        const { item } = this.projection.state.slots[slotNumber];
+        const equipEvent = new ItemEquipped(this.projection.state.characterId, slotNumber, item);
         this.projection.apply(equipEvent);
         publishEvent(equipEvent);
     }

@@ -1,6 +1,6 @@
 export declare enum CharacterClass {
-    FIGHTER = 0,
-    CLERIC = 1,
-    WIZARD = 2,
-    ROGUE = 3
+    FIGHTER = "fighter",
+    CLERIC = "cleric",
+    WIZARD = "wizard",
+    ROGUE = "rogue"
 }

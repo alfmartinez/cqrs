@@ -1,14 +1,10 @@
+import {CharacterClass} from "@fubattle/character";
 import {EquipmentLevel} from "./Equipment";
-import {Item} from "./Item";
+import {createItem} from "./Item";
 import {Slot} from "./Slot";
 
-export function createItemSet(level: EquipmentLevel) {
-    return [
-        new Slot(new Item("helmet"), 0),
-        new Slot(new Item("knife"), 1),
-        new Slot(new Item("buckler"), 2),
-        new Slot(new Item("cloak"), 3),
-        new Slot(new Item("cloth"), 4),
-        new Slot(new Item("boots"), 5),
-    ];
+export function createItemSet(level: EquipmentLevel, className: CharacterClass) {
+    return [...Array(6).keys()].map(
+        (slot) => new Slot(createItem(slot, className, level), slot),
+    );
 }

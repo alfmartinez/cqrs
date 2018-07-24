@@ -74,14 +74,14 @@ export class Equipment {
                 this.characterId = evt.characterId;
                 this.className = evt.className;
                 this.level = EquipmentLevel.WHITE;
-                this.slots = createItemSet(EquipmentLevel.WHITE);
+                this.slots = createItemSet(EquipmentLevel.WHITE, evt.className);
             })
             .register(ItemEquipped, function(this: IEquipment, evt: ItemEquipped) {
                 this.slots[evt.slot].equipped = true;
             })
             .register(EquipmentUpgraded, function(this: IEquipment, evt: EquipmentUpgraded) {
                 this.level = evt.level;
-                this.slots = createItemSet(evt.level);
+                this.slots = createItemSet(evt.level, this.className);
             })
             .apply(events);
     }
