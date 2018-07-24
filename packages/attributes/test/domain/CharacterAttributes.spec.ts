@@ -12,7 +12,8 @@ describe("CharacterAttributes", () => {
         const attributes = new CharacterAttributes([createdEvent]);
         const actualView = attributes.getView();
         expect(actualView).toEqual({
-            characterId: characterId,
+            characterId,
+            className,
             energy: {
                 health: 100,
                 mana: 100

@@ -3,6 +3,7 @@ import {CharacterCreated, CharacterId} from "@fubattle/character";
 
 export interface ICharacterAttributes {
     characterId: CharacterId,
+    className: string,
     energy: {
         health: number,
         mana: number
@@ -25,6 +26,7 @@ export class CharacterAttributes {
         this.projection
             .register(CharacterCreated, function(this: ICharacterAttributes, evt: CharacterCreated) {
                 this.characterId = evt.characterId;
+                this.className = evt.className;
                 this.energy = {
                     health: 100,
                     mana: 100
