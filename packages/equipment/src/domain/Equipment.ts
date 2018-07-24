@@ -1,5 +1,5 @@
 import {DecisionProjection} from "@cqrs-alf/common";
-import {CharacterCreated, CharacterId} from "@fubattle/character";
+import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
 import {createItemSet} from "./ItemSet";
 import {Slot} from "./Slot";
 
@@ -18,7 +18,7 @@ export enum EquipmentLevel {
 
 interface IEquipment {
     characterId: CharacterId;
-    className: string;
+    className: CharacterClass;
     level: number;
     slots: any[];
 }

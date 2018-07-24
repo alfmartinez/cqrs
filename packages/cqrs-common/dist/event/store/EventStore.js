@@ -1,22 +1,20 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var EventDontContainAggregateId_1 = require("./EventDontContainAggregateId");
-var EventStore = /** @class */ (function () {
-    function EventStore() {
-        var _this = this;
+const EventDontContainAggregateId_1 = require("./EventDontContainAggregateId");
+class EventStore {
+    constructor() {
         this.events = [];
-        this.store = function (event) {
+        this.store = (event) => {
             if (!event.getAggregateId) {
                 throw new EventDontContainAggregateId_1.EventDontContainAggregateId(event.constructor.name);
             }
-            _this.events.push(event);
+            this.events.push(event);
         };
     }
-    EventStore.prototype.getEventsOfAggregate = function (aggregateId) {
-        return this.events.filter(function (event) {
+    getEventsOfAggregate(aggregateId) {
+        return this.events.filter((event) => {
             return event.getAggregateId().equals(aggregateId);
         });
-    };
-    return EventStore;
-}());
+    }
+}
 exports.EventStore = EventStore;

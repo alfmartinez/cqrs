@@ -3,12 +3,13 @@ import {
     Character, CharacterCreated, CharacterId, createCharacter, ExperienceGained,
     LevelGained,
 } from "../../src/domain/Character";
+import {CharacterClass} from "../../src/domain/CharacterClass";
 
 describe("Character Aggregate", () => {
 
     const userId = new UserId("mix@test.fr");
     const name = "Elbrow";
-    const className = "Fighter";
+    const className = CharacterClass.FIGHTER;
     const id = new CharacterId("toto");
     const level = 1;
     const exp = 0;
@@ -25,13 +26,15 @@ describe("Character Aggregate", () => {
 
     it("Given no events, it should left state blank", () => {
         const character = new Character([]);
-        expect(character.projection.state).toEqual({});
+        const actual = character.getView();
+        expect(actual).toEqual({});
     });
 
     it("Given CharacterCreated, it should initialize CharacterState", () => {
         const created = new CharacterCreated(id, userId, name, className);
         const character = new Character([created]);
-        expect(character.projection.state).toEqual({
+        const actual = character.getView();
+        expect(actual).toEqual({
             className,
             exp,
             id,
@@ -46,7 +49,8 @@ describe("Character Aggregate", () => {
         const created = new CharacterCreated(id, userId, name, className);
         const gainedExperience  = new ExperienceGained(id, 1);
         const character = new Character([created, gainedExperience]);
-        expect(character.projection.state).toEqual({
+        const actual = character.getView();
+        expect(actual).toEqual({
             className,
             exp: 1,
             id,
@@ -62,7 +66,8 @@ describe("Character Aggregate", () => {
         const gainedExperience  = new ExperienceGained(id, 1001);
         const levelGained = new LevelGained(id);
         const character = new Character([created, gainedExperience, levelGained]);
-        expect(character.projection.state).toEqual({
+        const actual = character.getView();
+        expect(actual).toEqual({
             className,
             exp: 1001,
             id,

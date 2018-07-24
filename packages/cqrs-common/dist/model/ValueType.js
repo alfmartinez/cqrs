@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var ValueType = /** @class */ (function () {
-    function ValueType() {
-    }
-    ValueType.prototype.equals = function (other) {
+class ValueType {
+    constructor() { }
+    equals(other) {
         if (!other) {
             return false;
         }
         return this.toString() === other.toString();
-    };
-    return ValueType;
-}());
+    }
+}
 exports.ValueType = ValueType;

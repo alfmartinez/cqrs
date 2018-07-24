@@ -1,28 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var DecisionProjection = /** @class */ (function () {
-    function DecisionProjection() {
+class DecisionProjection {
+    constructor() {
         this.state = {};
         this.handlers = {};
     }
-    DecisionProjection.prototype.register = function (eventType, action) {
+    register(eventType, action) {
         this.handlers[eventType.name] = action;
         return this;
-    };
-    DecisionProjection.prototype.apply = function (events) {
-        var _this = this;
+    }
+    apply(events) {
         if (events instanceof Array) {
-            events.forEach(function (singleEvent) { return _this.apply.call(_this, singleEvent); });
+            events.forEach((singleEvent) => this.apply.call(this, singleEvent));
             return this;
         }
-        var event = events;
-        var typeName = event.constructor.name;
-        var handler = this.handlers[typeName];
+        const event = events;
+        const typeName = event.constructor.name;
+        const handler = this.handlers[typeName];
         if (handler) {
             handler.call(this.state, event);
         }
         return this;
-    };
-    return DecisionProjection;
-}());
+    }
+}
 exports.DecisionProjection = DecisionProjection;

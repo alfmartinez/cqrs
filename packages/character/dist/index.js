@@ -5,3 +5,4 @@ function __export(m) {
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./domain/Character"));
 __export(require("./infrastructure/CharacterRepository"));
+__export(require("./domain/CharacterClass"));

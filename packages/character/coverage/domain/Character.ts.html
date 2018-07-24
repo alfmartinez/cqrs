@@ -22,7 +22,7 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Statements</span>
-        <span class='fraction'>48/48</span>
+        <span class='fraction'>49/49</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
@@ -32,12 +32,12 @@
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Functions</span>
-        <span class='fraction'>15/15</span>
+        <span class='fraction'>16/16</span>
       </div>
       <div class='fl pad1y space-right2'>
         <span class="strong">100% </span>
         <span class="quiet">Lines</span>
-        <span class='fraction'>48/48</span>
+        <span class='fraction'>49/49</span>
       </div>
     </div>
     <p class="quiet">
@@ -169,7 +169,17 @@
 <a name='L121'></a><a href='#L121'>121</a>
 <a name='L122'></a><a href='#L122'>122</a>
 <a name='L123'></a><a href='#L123'>123</a>
-<a name='L124'></a><a href='#L124'>124</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
@@ -264,6 +274,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
@@ -287,6 +301,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -294,6 +312,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import {DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
 import {UserId} from "@fubattle/user";
+import {CharacterClass} from "./CharacterClass";
 &nbsp;
 export class CharacterId extends ValueType {
     public id: string;
@@ -312,7 +331,7 @@ export interface ICharacterState {
     id: CharacterId;
     userId: UserId;
     name: string;
-    className: string;
+    className: CharacterClass;
     level: number;
     exp: number;
     nextLevel: number;
@@ -348,9 +367,9 @@ export class CharacterCreated {
     public characterId: CharacterId;
     public userId: UserId;
     public name: string;
-    public className: string;
+    public className: CharacterClass;
 &nbsp;
-    constructor(characterId: CharacterId, userId: UserId, name: string, className: string) {
+    constructor(characterId: CharacterId, userId: UserId, name: string, className: CharacterClass) {
         this.userId = userId;
         this.name = name;
         this.className = className;
@@ -386,6 +405,10 @@ export class Character {
             .apply(events);
     }
 &nbsp;
+    public getView(): ICharacterState {
+        return this.projection.state;
+    }
+&nbsp;
     public gainExperience(publishEvent: (evt: any) =&gt; any, amount: number) {
         const characterId = this.projection.state.id;
         const experienceGained = new ExperienceGained(characterId, amount);
@@ -409,7 +432,11 @@ export class Character {
     }
 }
 &nbsp;
-export function createCharacter(publishEvent: (evt: any) =&gt; any, userId: UserId, name: string, className: string) {
+export function createCharacter(
+    publishEvent: (evt: any) =&gt; any,
+    userId: UserId, name: string,
+    className: CharacterClass,
+) {
     const characterId = new CharacterId(IdGenerator.generate());
     const createdEvent = new CharacterCreated(characterId, userId, name, className);
     publishEvent(createdEvent);
@@ -421,7 +448,7 @@ export function createCharacter(publishEvent: (evt: any) =&gt; any, userId: User
 </div><!-- /wrapper -->
 <div class='footer quiet pad2 space-top1 center small'>
   Code coverage
-  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jul 24 2018 09:26:05 GMT+0200 (GMT+02:00)
+  generated by <a href="https://istanbul.js.org/" target="_blank">istanbul</a> at Tue Jul 24 2018 14:58:43 GMT+0200 (GMT+02:00)
 </div>
 </div>
 <script src="../prettify.js"></script>

@@ -3,8 +3,8 @@ import {ValueType} from "@cqrs-alf/common";
 export class UserEmailCannotBeEmpty implements Error {
     name: string = "UserEmailCannotBeEmpty";
     message: string;
-    constructor(message: string = 'User email cannot be empty') {
-        this.message = message;
+    constructor() {
+        this.message = 'User email cannot be empty';
     }
 }
 

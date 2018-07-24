@@ -1,24 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var events_1 = require("events");
-var EventPublisher = /** @class */ (function () {
-    function EventPublisher() {
-        var _this = this;
+const events_1 = require("events");
+class EventPublisher {
+    constructor() {
         this.eventEmitter = new events_1.EventEmitter();
-        this.publish = function (event) {
-            _this.eventEmitter.emit("*", event);
-            var eventName = event.constructor.name;
-            _this.eventEmitter.emit(eventName, event);
+        this.publish = (event) => {
+            this.eventEmitter.emit("*", event);
+            const eventName = event.constructor.name;
+            this.eventEmitter.emit(eventName, event);
         };
     }
-    EventPublisher.prototype.onAny = function (action) {
+    onAny(action) {
         this.eventEmitter.on("*", action);
         return this;
-    };
-    EventPublisher.prototype.on = function (eventType, action) {
+    }
+    on(eventType, action) {
         this.eventEmitter.on(eventType.name, action);
         return this;
-    };
-    return EventPublisher;
-}());
+    }
+}
 exports.EventPublisher = EventPublisher;

@@ -1,5 +1,6 @@
 import {DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
 import {UserId} from "@fubattle/user";
+import {CharacterClass} from "./CharacterClass";
 
 export class CharacterId extends ValueType {
     public id: string;
@@ -18,7 +19,7 @@ export interface ICharacterState {
     id: CharacterId;
     userId: UserId;
     name: string;
-    className: string;
+    className: CharacterClass;
     level: number;
     exp: number;
     nextLevel: number;
@@ -54,9 +55,9 @@ export class CharacterCreated {
     public characterId: CharacterId;
     public userId: UserId;
     public name: string;
-    public className: string;
+    public className: CharacterClass;
 
-    constructor(characterId: CharacterId, userId: UserId, name: string, className: string) {
+    constructor(characterId: CharacterId, userId: UserId, name: string, className: CharacterClass) {
         this.userId = userId;
         this.name = name;
         this.className = className;
@@ -92,6 +93,10 @@ export class Character {
             .apply(events);
     }
 
+    public getView(): ICharacterState {
+        return this.projection.state;
+    }
+
     public gainExperience(publishEvent: (evt: any) => any, amount: number) {
         const characterId = this.projection.state.id;
         const experienceGained = new ExperienceGained(characterId, amount);
@@ -115,7 +120,11 @@ export class Character {
     }
 }
 
-export function createCharacter(publishEvent: (evt: any) => any, userId: UserId, name: string, className: string) {
+export function createCharacter(
+    publishEvent: (evt: any) => any,
+    userId: UserId, name: string,
+    className: CharacterClass,
+) {
     const characterId = new CharacterId(IdGenerator.generate());
     const createdEvent = new CharacterCreated(characterId, userId, name, className);
     publishEvent(createdEvent);
