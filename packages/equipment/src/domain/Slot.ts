@@ -1,3 +1,5 @@
+import {Item} from "./Item";
+
 export class Slot {
     public item: Item;
     public equipped: boolean;

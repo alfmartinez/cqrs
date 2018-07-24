@@ -14,7 +14,7 @@ describe("Character Aggregate", () => {
     const exp = 0;
     const nextLevel = 1000;
 
-    const eventsRaised = [];
+    let eventsRaised: any[];
     const publishEvent = (evt) => {
         eventsRaised.push(evt);
     };
@@ -104,7 +104,7 @@ describe("Character factory", () => {
     const name = "Elbrow";
     const className = "Fighter";
 
-    const eventsRaised = [];
+    let eventsRaised: any[];
     const publishEvent = (evt) => {
         eventsRaised.push(evt);
     };

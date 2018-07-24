@@ -1,7 +1,6 @@
 import {Equipment, EquipmentLevel, EquipmentUpgraded, ItemEquipped, SlotNotEquipped} from "../../src/domain/Equipment";
 import {CharacterId, CharacterCreated} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
-import {Item} from "../../src/domain/Item";
 import {createItemSet} from "../../src/domain/ItemSet";
 import each from 'jest-each';
 
@@ -12,7 +11,7 @@ describe('Equipment', () => {
     const className = "Fighter";
     const createdEvent = new CharacterCreated(characterId, userId, 'testCharacter', className);
     let equipment: Equipment;
-    const eventsRaised: any[];
+    let eventsRaised: any[];
     const publishEvent = (evt) => {
         eventsRaised.push(evt);
     };
@@ -71,7 +70,7 @@ describe('Equipment', () => {
         });
 
         equipment = new Equipment(events);
-        expect(() => equipment.upgrade(publishEvent)).toThrow(SlotNotEquipped(2));
+        expect(() => equipment.upgrade(publishEvent)).toThrow(new SlotNotEquipped(2));
 
 
         const upgradeEvent = new EquipmentUpgraded(characterId,1);
