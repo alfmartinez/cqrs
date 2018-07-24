@@ -21,7 +21,7 @@ function createItem(slot, className, level) {
     if (!ItemMap_1.itemMap[className][level]) {
         throw new Error("No item map for " + className + " at level " + level);
     }
-    if (!ItemMap_1.itemMap[className][level]) {
+    if (!ItemMap_1.itemMap[className][level][slot]) {
         throw new Error("No item map for " + className + " at level " + level + " for slot " + slot);
     }
     const [name, category, attribute, value] = ItemMap_1.itemMap[className][level][slot];

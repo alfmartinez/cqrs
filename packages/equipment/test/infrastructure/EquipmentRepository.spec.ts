@@ -1,8 +1,8 @@
 import {EventStore} from "@cqrs-alf/common";
-import {CharacterCreated, CharacterId, CharacterClass} from "@fubattle/character";
+import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
 import {EquipmentRepository, UnknownCharacter} from "../../src/infrastructure/EquipmentRepository";
-import {Equipment, ItemEquipped} from "../../src/domain/Equipment";
+import {Equipment, EquipmentLevel, EquipmentUpgraded, ItemEquipped} from "../../src/domain/Equipment";
 
 describe("EquipmentRepository", () => {
 
@@ -47,5 +47,15 @@ describe("EquipmentRepository", () => {
         const state = equipment.getView();
         expect(state.slots[0].equipped).toBe(true);
         expect(state.slots[1].equipped).toBe(false);
+    });
+
+    it("getEquipment returns Character if multiple events exist for equipment aggregate", () => {
+        eventStore.store(new CharacterCreated(characterId, userId, name, className));
+        eventStore.store(new EquipmentUpgraded(characterId, EquipmentLevel.GREEN0));
+
+        const equipment = equipmentRepository.getEquipment(characterId);
+        expect(equipment).toBeInstanceOf(Equipment);
+        const state = equipment.getView();
+        expect(state.level).toBe(EquipmentLevel.GREEN0);
     });
 });

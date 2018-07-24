@@ -25,7 +25,7 @@ export function createItem(slot: number, className: CharacterClass, level: Equip
     if (!itemMap[className][level]) {
         throw new Error("No item map for " + className + " at level " + level);
     }
-    if (!itemMap[className][level]) {
+    if (!itemMap[className][level][slot]) {
         throw new Error("No item map for " + className + " at level " + level + " for slot " + slot);
     }
     const [name, category, attribute, value] = itemMap[className][level][slot];

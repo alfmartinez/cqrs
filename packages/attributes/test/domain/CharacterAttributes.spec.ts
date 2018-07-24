@@ -12,6 +12,7 @@ describe("CharacterAttributes", () => {
     const createdEvent = new CharacterCreated(characterId, userId, 'testCharacter', className);
     const levelGained = new LevelGained(characterId);
     const itemEquipped = new ItemEquipped(characterId, 0, new Item("knife",new Bonus("normal","attack",1)));
+    const itemEnergyEquipped = new ItemEquipped(characterId, 0, new Item("cloak",new Bonus("energy","mana",10)));
 
     it('should return minimal attributes on CharacterCreated', () => {
         const attributes = new CharacterAttributes([createdEvent]);
@@ -60,14 +61,14 @@ describe("CharacterAttributes", () => {
     });
 
     it('should upgrade attributes on ItemEquipped', () => {
-        const attributes = new CharacterAttributes([createdEvent, itemEquipped]);
+        const attributes = new CharacterAttributes([createdEvent, itemEquipped, itemEnergyEquipped]);
         const actualView = attributes.getView();
         expect(actualView).toEqual({
             characterId,
             className,
             energy: {
                 health: 100,
-                mana: 100
+                mana: 110
             },
             normal: {
                 attack: 11,
