@@ -8,6 +8,6 @@ export class Item extends ValueType {
     }
 
     public toString(): string {
-        return "Item: " + name;
+        return "Item: " + this.name;
     }
 }

@@ -32,7 +32,7 @@ describe("CharacterAttributes", () => {
         })
     });
 
-    it('should return upgrade attributes on LevelGained', () => {
+    it('should upgrade attributes on LevelGained', () => {
         const attributes = new CharacterAttributes([createdEvent, levelGained]);
         const actualView = attributes.getView();
         expect(actualView).toEqual({
