@@ -3,8 +3,8 @@ import { CharacterClass } from "@fubattle/character";
 import { Bonus } from "./Bonus";
 import { EquipmentLevel } from "./Equipment";
 export declare class Item extends ValueType {
-    private name;
-    private bonus;
+    name: string;
+    bonus: Bonus;
     constructor(name: string, bonus: Bonus);
     toString(): string;
 }

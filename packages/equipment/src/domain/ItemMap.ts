@@ -1,6 +1,13 @@
-import {CharacterClass} from "../../../character/dist";
+import {CharacterClass} from "@fubattle/character";
 
-export const itemMap = {
+type ItemDescriptor = [string, string, string, number];
+type ItemSetDescriptor = ItemDescriptor[];
+type ClassItemSetDescriptor = ItemSetDescriptor[];
+interface ItemMap {
+    [key: string]: ClassItemSetDescriptor;
+}
+
+export const itemMap: ItemMap = {
     [CharacterClass.FIGHTER] : [
         [                                       // Level WHITE
             ["cap", "normal", "defense", 1],

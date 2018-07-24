@@ -1,16 +1,22 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const dist_1 = require("../../../character/dist");
+const character_1 = require("@fubattle/character");
 exports.itemMap = {
-    [dist_1.CharacterClass.FIGHTER]: [
-        // Level WHITE
+    [character_1.CharacterClass.FIGHTER]: [
         [
-            ["helmet", "normal", "defense", 1],
+            ["cap", "normal", "defense", 1],
             ["knife", "normal", "damage", 1],
             ["buckler", "normal", "defense", 1],
             ["cloak", "normal", "defense", 1],
             ["cloth", "normal", "defense", 1],
             ["boots", "normal", "attack", 1],
+        ], [
+            ["light skullcap", "normal", "defense", 1],
+            ["short sword", "normal", "damage", 2],
+            ["buckler+", "normal", "defense", 1],
+            ["cloak+", "special", "attack", 1],
+            ["cloth+", "special", "defense", 1],
+            ["boots+", "special", "damage", 1],
         ],
     ],
 };

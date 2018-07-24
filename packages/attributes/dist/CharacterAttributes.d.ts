@@ -2,12 +2,14 @@ import { CharacterClass, CharacterId } from "@fubattle/character";
 export declare class Energy {
     health: number;
     mana: number;
+    constructor(health?: number, mana?: number);
     add(increment: Energy): void;
 }
 export declare class Attributes {
     attack: number;
     defense: number;
     damage: number;
+    constructor(attack?: number, defense?: number, damage?: number);
     add(increment: Attributes): void;
 }
 export interface ICharacterAttributesView {

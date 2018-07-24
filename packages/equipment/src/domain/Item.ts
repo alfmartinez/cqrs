@@ -5,8 +5,8 @@ import {EquipmentLevel} from "./Equipment";
 import {itemMap} from "./ItemMap";
 
 export class Item extends ValueType {
-    private name: string;
-    private bonus: Bonus;
+    public name: string;
+    public bonus: Bonus;
     constructor(name: string, bonus: Bonus) {
         super();
         this.name = name;

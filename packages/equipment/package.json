@@ -2,7 +2,8 @@
   "name": "@fubattle/equipment",
   "version": "1.0.0",
   "description": "Character Domain",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "rimraf dist/ && tsc",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",

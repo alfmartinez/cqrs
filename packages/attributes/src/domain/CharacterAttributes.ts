@@ -1,10 +1,15 @@
 import {DecisionProjection} from "@cqrs-alf/common";
 import {CharacterClass, CharacterCreated, CharacterId, LevelGained} from "@fubattle/character";
-
+import {ItemEquipped, Bonus} from "@fubattle/equipment";
 
 export class Energy {
-    health: number = 100;
-    mana: number = 100;
+    health: number;
+    mana: number;
+
+    constructor(health = 0, mana = 0) {
+        this.health = health;
+        this.mana = mana;
+    }
 
     add(increment: Energy) {
         this.health += increment.health;
@@ -13,9 +18,16 @@ export class Energy {
 }
 
 export class Attributes {
-    attack: number = 10;
-    defense: number = 10;
-    damage: number = 10;
+    attack: number;
+    defense: number;
+    damage: number;
+
+
+    constructor(attack: number = 0, defense: number = 0, damage: number = 0) {
+        this.attack = attack;
+        this.defense = defense;
+        this.damage = damage;
+    }
 
     add(increment: Attributes) {
         this.attack += increment.attack;
@@ -39,27 +51,32 @@ export class CharacterAttributes {
             .register(CharacterCreated, function(this: ICharacterAttributesView, evt: CharacterCreated) {
                 this.characterId = evt.characterId;
                 this.className = evt.className;
-                this.energy = new Energy();
-                this.normal = new Attributes();
-                this.special = new Attributes();
+                this.energy = new Energy(100,100);
+                this.normal = new Attributes(10,10,10);
+                this.special = new Attributes(10,10,10);
             })
             .register(LevelGained, function(this: ICharacterAttributesView, evt: LevelGained) {
-                this.energy.add({
-                    health: 10,
-                    mana: 5
-                } as Energy);
-                this.normal.add({
-                    attack: 2,
-                    defense: 1,
-
-                    damage: 2
-                } as Attributes);
-                this.special.add({
-                    attack: 1,
-                    defense: 1,
-
-                    damage: 1
-                } as Attributes);
+                this.energy.add(new Energy(10,5));
+                this.normal.add(new Attributes(2,1,2));
+                this.special.add(new Attributes(1,1,1));
+            })
+            .register(ItemEquipped, function(this: ICharacterAttributesView, evt: ItemEquipped) {
+                const bonus: Bonus = evt.item.bonus;
+                const {value, attribute, category} = bonus;
+                let increment;
+                switch(bonus.category) {
+                    case "energy":
+                        increment = new Energy();
+                        (<any>increment)[attribute] = value;
+                        this.energy.add(increment);
+                        break;
+                    case "normal":
+                    case "special":
+                        increment = new Attributes();
+                        (<any>increment)[attribute] = value;
+                        (<any>this)[category].add(increment);
+                        break;
+                }
             })
             .apply(events);
 

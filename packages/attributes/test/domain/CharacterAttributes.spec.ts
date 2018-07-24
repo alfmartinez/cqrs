@@ -1,13 +1,17 @@
 import {CharacterId, CharacterCreated, LevelGained} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
-import {CharacterAttributes} from "../../src/domain/CharacterAttributes";
+import {CharacterAttributes, Energy} from "../../src/domain/CharacterAttributes";
+import {Item,Bonus,ItemEquipped} from "@fubattle/equipment";
+import {CharacterClass} from "@fubattle/character";
+import {Attributes} from "../../dist/CharacterAttributes";
 
 describe("CharacterAttributes", () => {
     const characterId = new CharacterId("foo");
     const userId = new UserId("bar@baz.com");
-    const className = "Fighter";
+    const className = CharacterClass.FIGHTER;
     const createdEvent = new CharacterCreated(characterId, userId, 'testCharacter', className);
     const levelGained = new LevelGained(characterId);
+    const itemEquipped = new ItemEquipped(characterId, 0, new Item("knife",new Bonus("normal","attack",1)));
 
     it('should return minimal attributes on CharacterCreated', () => {
         const attributes = new CharacterAttributes([createdEvent]);
@@ -54,4 +58,27 @@ describe("CharacterAttributes", () => {
             }
         })
     });
+
+    it('should upgrade attributes on ItemEquipped', () => {
+        const attributes = new CharacterAttributes([createdEvent, itemEquipped]);
+        const actualView = attributes.getView();
+        expect(actualView).toEqual({
+            characterId,
+            className,
+            energy: {
+                health: 100,
+                mana: 100
+            },
+            normal: {
+                attack: 11,
+                defense: 10,
+                damage: 10
+            },
+            special: {
+                attack: 10,
+                defense: 10,
+                damage: 10
+            }
+        })
+    })
 })
