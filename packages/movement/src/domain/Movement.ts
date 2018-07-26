@@ -16,6 +16,16 @@ export class PositionInitialized {
     }
 }
 
+export class DestinationSelected {
+    public characterId: CharacterId;
+    public position: IPosition;
+
+    constructor(characterId: CharacterId, point: IPosition) {
+        this.characterId = characterId;
+        this.position = point;
+    }
+}
+
 export interface IMovementState {
     position: IPosition;
     facing: IPosition;
@@ -33,6 +43,10 @@ export class Movement {
                 this.position = event.position;
                 this.facing = {x: 1, y: 0};
                 this.moving = false;
+            })
+            .register(DestinationSelected, function(this: IMovementState, event: DestinationSelected) {
+                this.heading = event.position;
+                this.moving = true;
             })
             .apply(events);
     }
