@@ -1,0 +1,51 @@
+{
+  "name": "@fubattle/movement",
+  "version": "1.0.0",
+  "description": "Character Domain",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "rimraf dist/ && tsc",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
+    "pretest": "npm run lint",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Alexandre Martinez <alexandre.martinez76@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://git@github.com:alfmartinez/cqrs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/alfmartinez/cqrs/issues"
+  },
+  "homepage": "https://github.com/alfmartinez/cqrs/tree/master/packages/cqrs-common",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/jest": "^23.3.0",
+    "jest": "^23.4.1",
+    "ts-jest": "^23.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^2.9.2"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": ".*\\.spec\\.(ts|tsx|js)$"
+  },
+  "dependencies": {
+    "@cqrs-alf/common": "1.0.0",
+    "@fubattle/character": "1.0.0"
+  }
+}

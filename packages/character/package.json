@@ -25,11 +25,15 @@
     "@types/jest": "^23.3.0",
     "jest": "^23.4.1",
     "ts-jest": "^23.0.1",
+    "tslint": "^5.11.0",
     "typescript": "^2.9.2"
   },
   "jest": {
     "collectCoverage": true,
-    "coverageReporters": ["json", "html"],
+    "coverageReporters": [
+      "json",
+      "html"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",
