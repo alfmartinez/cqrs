@@ -9,7 +9,7 @@ export class BattleId extends ValueType {
     }
 
     toString() {
-        return "Battle: " + this.id;
+        return "Battle: " + this.battleId;
     }
 }
 
