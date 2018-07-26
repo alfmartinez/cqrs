@@ -19,7 +19,7 @@ export class PositionInitialized {
 export interface IMovementState {
     position: IPosition;
     facing: IPosition;
-    heading: IPosition;
+    heading?: IPosition;
     moving: false;
 }
 

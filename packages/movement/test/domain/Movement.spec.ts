@@ -15,6 +15,7 @@ describe("Movement", () => {
         expect(state.position).toEqual(position);
         expect(state.facing).toEqual(expectedFacing);
         expect(state.moving).toBe(false);
+        expect(state.heading).not.toBeDefined();
 
     })
 })
