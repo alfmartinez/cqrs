@@ -30,7 +30,7 @@ export interface IMovementState {
     position: IPosition;
     facing: IPosition;
     heading?: IPosition;
-    moving: false;
+    moving: boolean;
 }
 
 export class Movement {
