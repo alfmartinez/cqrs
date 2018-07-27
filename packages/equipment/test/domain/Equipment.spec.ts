@@ -1,6 +1,5 @@
 import {Equipment, EquipmentLevel, EquipmentUpgraded, ItemEquipped, SlotNotEquipped} from "../../src/domain/Equipment";
 import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
-import {UserId} from "@fubattle/user";
 import {createItemSet} from "../../src/domain/ItemSet";
 import each from 'jest-each';
 import {createItem, Item} from "../../src/domain/Item";
@@ -9,9 +8,8 @@ import {Bonus} from "../../src/domain/Bonus";
 describe('Equipment', () => {
 
     const characterId = new CharacterId("foo");
-    const userId = new UserId("bar@baz.com");
     const className = CharacterClass.FIGHTER;
-    const createdEvent = new CharacterCreated(characterId, userId, 'testCharacter', className);
+    const createdEvent = new CharacterCreated(characterId, 'testCharacter', className);
     let equipment: Equipment;
     let eventsRaised: any[];
     const publishEvent = (evt) => {

@@ -8,7 +8,6 @@ describe("CharacterRepository", () => {
     let characterRepository;
     let eventStore;
     const characterId = new CharacterId("zorglub");
-    const userId = new UserId("testuser");
     const name = "Zorglub";
     const className = "Mastermind";
 
@@ -23,7 +22,7 @@ describe("CharacterRepository", () => {
     });
 
     it("getCharacter returns Character if an event exists for character aggregate", () => {
-        eventStore.store(new CharacterCreated(characterId, userId, name, className));
+        eventStore.store(new CharacterCreated(characterId, name, className));
         const character = characterRepository.getCharacter(characterId);
         expect(character).toBeInstanceOf(Character);
         const state = character.projection.state;
@@ -32,7 +31,7 @@ describe("CharacterRepository", () => {
     });
 
     it("getCharacter returns Character if multiple events exist for character aggregate", () => {
-        eventStore.store(new CharacterCreated(characterId, userId, name, className));
+        eventStore.store(new CharacterCreated(characterId, name, className));
         eventStore.store(new ExperienceGained(characterId, 500));
         eventStore.store(new LevelGained(characterId));
 

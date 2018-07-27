@@ -1,6 +1,6 @@
 import {UserId} from "@fubattle/user";
 import {
-    Character, CharacterCreated, CharacterId, createCharacter, ExperienceGained,
+    Character, CharacterCreated, CharacterId, CharacterOwnedByUser, createCharacter, ExperienceGained,
     LevelGained,
 } from "../../src/domain/Character";
 import {CharacterClass} from "../../src/domain/CharacterClass";
@@ -31,7 +31,7 @@ describe("Character Aggregate", () => {
     });
 
     it("Given CharacterCreated, it should initialize CharacterState", () => {
-        const created = new CharacterCreated(id, userId, name, className);
+        const created = new CharacterCreated(id, name, className);
         const character = new Character([created]);
         const actual = character.getView();
         expect(actual).toEqual({
@@ -40,13 +40,12 @@ describe("Character Aggregate", () => {
             id,
             level,
             name,
-            nextLevel,
-            userId,
+            nextLevel
         });
     });
 
     it("Given ExperienceGained, amount should be added to exp", () => {
-        const created = new CharacterCreated(id, userId, name, className);
+        const created = new CharacterCreated(id, name, className);
         const gainedExperience  = new ExperienceGained(id, 1);
         const character = new Character([created, gainedExperience]);
         const actual = character.getView();
@@ -56,13 +55,12 @@ describe("Character Aggregate", () => {
             id,
             level,
             name,
-            nextLevel,
-            userId,
+            nextLevel
         });
     });
 
     it("Given LevelGained, level should be increased", () => {
-        const created = new CharacterCreated(id, userId, name, className);
+        const created = new CharacterCreated(id, name, className);
         const gainedExperience  = new ExperienceGained(id, 1001);
         const levelGained = new LevelGained(id);
         const character = new Character([created, gainedExperience, levelGained]);
@@ -73,13 +71,12 @@ describe("Character Aggregate", () => {
             id,
             level: 2,
             name,
-            nextLevel: 3000,
-            userId,
+            nextLevel: 3000
         });
     });
 
     it("When gainExperience method is called, Then ExperienceGained should be published", () => {
-        const created = new CharacterCreated(id, userId, name, className);
+        const created = new CharacterCreated(id, name, className);
         const gainedExperience  = new ExperienceGained(id, 1);
         const character = new Character([created, gainedExperience]);
         character.gainExperience(publishEvent, 50);
@@ -90,7 +87,7 @@ describe("Character Aggregate", () => {
 
     it("When gainExperience method is called with a sufficient amount to advance level,"
         + " Then ExperienceGained should be published and LevelGained", () => {
-        const created = new CharacterCreated(id, userId, name, className);
+        const created = new CharacterCreated(id, name, className);
         const gainedExperience  = new ExperienceGained(id, 990);
         const character = new Character([created, gainedExperience]);
         character.gainExperience(publishEvent, 50);
@@ -121,12 +118,21 @@ describe("Character factory", () => {
     it("should return characterId and publishes event", () => {
         const actual = createCharacter(publishEvent, userId, name, className);
         expect(actual).toBeInstanceOf(CharacterId);
-        expect(eventsRaised.length).toBe(1);
-        const event = eventsRaised[0];
-        expect(event.characterId).toBeDefined();
-        expect(event.name).toBe(name);
-        expect(event.className).toBe(className);
-        expect(event.userId).toBe(userId);
+        expect(eventsRaised.length).toBe(2);
+
+        const createdEvent = eventsRaised[0];
+        expect(createdEvent).toBeInstanceOf(CharacterCreated);
+        expect(createdEvent.characterId).toBe(actual);
+        expect(createdEvent.name).toBe(name);
+        expect(createdEvent.className).toBe(className);
+
+        const ownedEvent = eventsRaised[1];
+        expect(ownedEvent).toBeInstanceOf(CharacterOwnedByUser);
+        expect(ownedEvent.characterId).toBe(actual);
+        expect(ownedEvent.userId).toBe(userId);
+
+
+
 
     });
 });

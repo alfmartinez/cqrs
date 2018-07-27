@@ -17,8 +17,7 @@
     "jest": "^23.4.1",
     "ts-jest": "^23.0.1",
     "tslint": "^5.11.0",
-    "typescript": "^2.9.2",
-    "@fubattle/user": "1.0.0"
+    "typescript": "^2.9.2"
   },
   "dependencies": {
     "@cqrs-alf/common": "^1.0.0",

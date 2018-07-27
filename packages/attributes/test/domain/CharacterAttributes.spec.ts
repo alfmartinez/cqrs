@@ -1,15 +1,12 @@
 import {CharacterId, CharacterCreated, LevelGained} from "@fubattle/character";
-import {UserId} from "@fubattle/user";
-import {CharacterAttributes, Energy} from "../../src/domain/CharacterAttributes";
+import {CharacterAttributes} from "../../src/domain/CharacterAttributes";
 import {Item,Bonus,ItemEquipped} from "@fubattle/equipment";
 import {CharacterClass} from "@fubattle/character";
-import {Attributes} from "../../dist/CharacterAttributes";
 
 describe("CharacterAttributes", () => {
     const characterId = new CharacterId("foo");
-    const userId = new UserId("bar@baz.com");
     const className = CharacterClass.FIGHTER;
-    const createdEvent = new CharacterCreated(characterId, userId, 'testCharacter', className);
+    const createdEvent = new CharacterCreated(characterId, 'testCharacter', className);
     const levelGained = new LevelGained(characterId);
     const itemEquipped = new ItemEquipped(characterId, 0, new Item("knife",new Bonus("normal","attack",1)));
     const itemEnergyEquipped = new ItemEquipped(characterId, 0, new Item("cloak",new Bonus("energy","mana",10)));

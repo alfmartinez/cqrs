@@ -1,6 +1,5 @@
 import {EventStore} from "@cqrs-alf/common";
 import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
-import {UserId} from "@fubattle/user";
 import {EquipmentRepository, UnknownCharacter} from "../../src/infrastructure/EquipmentRepository";
 import {Equipment, EquipmentLevel, EquipmentUpgraded, ItemEquipped} from "../../src/domain/Equipment";
 
@@ -9,7 +8,6 @@ describe("EquipmentRepository", () => {
     let equipmentRepository;
     let eventStore;
     const characterId = new CharacterId("zorglub");
-    const userId = new UserId("testuser");
     const name = "Zorglub";
     const className = CharacterClass.FIGHTER;
 
@@ -24,7 +22,7 @@ describe("EquipmentRepository", () => {
     });
 
     it("getEquipment returns Equipment if an event exists for equipment aggregate", () => {
-        eventStore.store(new CharacterCreated(characterId, userId, name, className));
+        eventStore.store(new CharacterCreated(characterId, name, className));
         const equipment = equipmentRepository.getEquipment(characterId);
         expect(equipment).toBeInstanceOf(Equipment);
         const state = equipment.getView();
@@ -39,7 +37,7 @@ describe("EquipmentRepository", () => {
     });
 
     it("getEquipment returns Character if multiple events exist for equipment aggregate", () => {
-        eventStore.store(new CharacterCreated(characterId, userId, name, className));
+        eventStore.store(new CharacterCreated(characterId, name, className));
         eventStore.store(new ItemEquipped(characterId, 0));
 
         const equipment = equipmentRepository.getEquipment(characterId);
@@ -50,7 +48,7 @@ describe("EquipmentRepository", () => {
     });
 
     it("getEquipment returns Character if multiple events exist for equipment aggregate", () => {
-        eventStore.store(new CharacterCreated(characterId, userId, name, className));
+        eventStore.store(new CharacterCreated(characterId, name, className));
         eventStore.store(new EquipmentUpgraded(characterId, EquipmentLevel.GREEN0));
 
         const equipment = equipmentRepository.getEquipment(characterId);

@@ -47,7 +47,6 @@
   },
   "dependencies": {
     "@cqrs-alf/common": "1.0.0",
-    "@fubattle/character": "1.0.0",
-    "@fubattle/user": "1.0.0"
+    "@fubattle/character": "1.0.0"
   }
 }

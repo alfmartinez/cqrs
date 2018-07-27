@@ -51,14 +51,26 @@ export class LevelGained {
     }
 }
 
-export class CharacterCreated {
+export class CharacterOwnedByUser {
     public characterId: CharacterId;
     public userId: UserId;
+
+    constructor(characterId: CharacterId, userId: UserId) {
+        this.userId = userId;
+        this.characterId = characterId;
+    }
+
+    public getAggregateId() {
+        return this.characterId;
+    }
+}
+
+export class CharacterCreated {
+    public characterId: CharacterId;
     public name: string;
     public className: CharacterClass;
 
-    constructor(characterId: CharacterId, userId: UserId, name: string, className: CharacterClass) {
-        this.userId = userId;
+    constructor(characterId: CharacterId, name: string, className: CharacterClass) {
         this.name = name;
         this.className = className;
         this.characterId = characterId;
@@ -74,8 +86,7 @@ export class Character {
 
     constructor(events: any[]) {
         this.projection
-            .register(CharacterCreated, function applyCharacterCreated(this: ICharacterState, event) {
-                this.userId = event.userId;
+            .register(CharacterCreated, function(this: ICharacterState, event) {
                 this.name = event.name;
                 this.className = event.className;
                 this.id = event.characterId;
@@ -83,10 +94,13 @@ export class Character {
                 this.exp = 0;
                 this.nextLevel = 1000;
             })
-            .register(ExperienceGained, function applyExperienceGained(this: ICharacterState, event) {
+            .register(CharacterOwnedByUser, function(this: ICharacterState, event: CharacterOwnedByUser) {
+                this.userId = event.userId;
+            })
+            .register(ExperienceGained, function(this: ICharacterState, event) {
                 this.exp += event.amount;
             })
-            .register(LevelGained, function levelGained(this: ICharacterState, event) {
+            .register(LevelGained, function(this: ICharacterState, event) {
                 this.level++;
                 this.nextLevel += this.level * 1000;
             })
@@ -126,7 +140,12 @@ export function createCharacter(
     className: CharacterClass,
 ) {
     const characterId = new CharacterId(IdGenerator.generate());
-    const createdEvent = new CharacterCreated(characterId, userId, name, className);
+
+    const createdEvent = new CharacterCreated(characterId, name, className);
     publishEvent(createdEvent);
+
+    const ownedEvent = new CharacterOwnedByUser(characterId, userId);
+    publishEvent(ownedEvent);
+
     return characterId;
 }
