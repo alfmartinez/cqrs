@@ -28,12 +28,21 @@ export class DestinationSelected {
     }
 }
 
+export class MovementStarted {
+    public characterId: CharacterId;
+
+    constructor(characterId: CharacterId) {
+        this.characterId = characterId;
+    }
+}
+
 export interface IMovementState {
     position: IPosition;
     facing: IPosition;
     speed: number;
     heading?: IPosition;
     moving: boolean;
+    movement?: IPosition;
 }
 
 export class Movement {
@@ -51,6 +60,9 @@ export class Movement {
             .register(DestinationSelected, function(this: IMovementState, event: DestinationSelected) {
                 this.heading = event.position;
                 this.moving = true;
+            })
+            .register(MovementStarted, function(this: IMovementState, event: MovementStarted) {
+                this.movement = {x: 10, y: 0};
             })
             .apply(events);
     }
