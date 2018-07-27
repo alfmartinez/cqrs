@@ -5,8 +5,9 @@ describe("Movement", () => {
 
     const characterId = new CharacterId("foo");
     const position = {x: 100, y: 200};
+    const speed = 10;
     const destination = {x: 150, y: 200};
-    const initializeEvent = new PositionInitialized(characterId, position);
+    const initializeEvent = new PositionInitialized(characterId, position, speed);
     const destinationEvent = new DestinationSelected(characterId, destination);
 
     it("should initialize on PositionInitialized", () => {
@@ -18,6 +19,7 @@ describe("Movement", () => {
         expect(state.facing).toEqual(expectedFacing);
         expect(state.moving).toBe(false);
         expect(state.heading).not.toBeDefined();
+        expect(state.speed).toBe(10);
     });
 
     it("should start to move DestinationSelected", () => {
