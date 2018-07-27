@@ -24,6 +24,7 @@
   "devDependencies": {
     "@types/jest": "^23.3.0",
     "jest": "^23.4.1",
+    "jest-each": "^23.4.0",
     "ts-jest": "^23.0.1",
     "tslint": "^5.11.0",
     "typescript": "^2.9.2"
@@ -46,6 +47,8 @@
   },
   "dependencies": {
     "@cqrs-alf/common": "1.0.0",
-    "@fubattle/character": "1.0.0"
+    "@fubattle/character": "1.0.0",
+    "@types/victor": "^1.1.0",
+    "victor": "^1.1.0"
   }
 }

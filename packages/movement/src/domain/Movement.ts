@@ -1,5 +1,7 @@
 import {DecisionProjection} from "@cqrs-alf/common";
 import {CharacterId} from "@fubattle/character";
+import Victor = require("victor");
+import {computeMovement} from "../utils/ComputeMovement";
 
 export interface IPosition {
     readonly x: number;
@@ -62,7 +64,13 @@ export class Movement {
                 this.moving = true;
             })
             .register(MovementStarted, function(this: IMovementState, event: MovementStarted) {
-                this.movement = {x: 10, y: 0};
+                const {facing, movement} = computeMovement(
+                    this.position,
+                    this.heading,
+                    this.speed,
+                );
+                this.facing = facing;
+                this.movement = movement;
             })
             .apply(events);
     }

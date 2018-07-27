@@ -1,5 +1,6 @@
 import {CharacterId} from "@fubattle/character";
 import {DestinationSelected, Movement, MovementStarted, PositionInitialized} from "../../src/domain/Movement";
+import each from "jest-each";
 
 describe("Movement", () => {
 
@@ -34,15 +35,19 @@ describe("Movement", () => {
         expect(state.heading).toBe(destination);
     });
 
-    it("should change facing and movement on MovementStarted", () => {
+    each([
+        [ {x: 150, y: 200},{x: 1, y: 0},{x: 10, y: 0} ],
+        [ {x: 100, y: 300},{x: 0, y: 1},{x: 0, y: 10} ],
+    ]).it("should change facing and movement on MovementStarted", (destination, expectedFacing, expectedMovement) => {
+        const destinationEvent = new DestinationSelected(characterId, destination);
+
         const movement = new Movement([initializeEvent, destinationEvent, movementStartedEvent]);
         const state = movement.getView();
 
-        const expectedFacing = {x: 1, y: 0};
         expect(state.position).toEqual(position);
         expect(state.facing).toEqual(expectedFacing);
         expect(state.moving).toBe(true);
         expect(state.heading).toBe(destination);
-        expect(state.movement).toEqual({x: 10, y: 0});
+        expect(state.movement).toEqual(expectedMovement);
     })
 })
