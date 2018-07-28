@@ -3,7 +3,7 @@ import * as bodyParser from "body-parser";
 import * as logger from "morgan";
 import * as cookieParser from "cookie-parser";
 import * as errorHandler from "errorhandler";
-import {IndexRoute} from "./routes";
+import {RouteConfigurator} from "./routes";
 
 /**
  * The server.
@@ -97,8 +97,8 @@ export class Server {
         let router: express.Router;
         router = express.Router();
 
-        //IndexRoute
-        IndexRoute.create(router);
+        //RouteConfigurator
+        RouteConfigurator.create(router);
 
         //use router middleware
         this.app.use(router);

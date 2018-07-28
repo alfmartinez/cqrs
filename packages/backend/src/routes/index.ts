@@ -4,31 +4,33 @@ import { NextFunction, Request, Response, Router } from "express";
 /**
  * / route
  *
- * @class IndexRoute
+ * @class RouteConfigurator
  */
-export class IndexRoute {
+export class RouteConfigurator {
 
     /**
      * Create the routes.
      *
-     * @class IndexRoute
+     * @class RouteConfigurator
      * @method create
      * @static
      */
     public static create(router: Router) {
         //log
-        console.log("[IndexRoute::create] Creating index route.");
+        console.log("[RouteConfigurator::create] Creating route configurator.");
 
-        //add home page route
-        router.get("/", (req: Request, res: Response, next: NextFunction) => {
-            new IndexRoute().index(req, res, next);
-        });
+        const configurator = new RouteConfigurator();
+        configurator.configure(router);
+    }
+
+    public configure(router: Router) {
+        router.get("/", this.index);
     }
 
     /**
      * The home page route.
      *
-     * @class IndexRoute
+     * @class RouteConfigurator
      * @method index
      * @param req {Request} The express Request object.
      * @param res {Response} The express Response object.
