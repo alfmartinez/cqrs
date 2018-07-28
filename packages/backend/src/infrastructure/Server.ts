@@ -3,7 +3,7 @@ import * as bodyParser from "body-parser";
 import * as logger from "morgan";
 import * as cookieParser from "cookie-parser";
 import * as errorHandler from "errorhandler";
-import {RouteConfigurator} from "./routes";
+import {RouteConfigurator} from "./routes/index";
 
 /**
  * The server.

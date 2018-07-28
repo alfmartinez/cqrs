@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response, Router } from "express";
-
+import {EventStore, EventPublisher} from "@cqrs-alf/common";
 
 /**
  * / route
@@ -7,6 +7,8 @@ import { NextFunction, Request, Response, Router } from "express";
  * @class RouteConfigurator
  */
 export class RouteConfigurator {
+    private store: EventStore = new EventStore();
+    private eventPublisher: EventPublisher = new EventPublisher();
 
     /**
      * Create the routes.
@@ -20,15 +22,20 @@ export class RouteConfigurator {
         console.log("[RouteConfigurator::create] Creating route configurator.");
 
         const configurator = new RouteConfigurator();
+        configurator.bootstrapInfrastructure();
         configurator.configure(router);
     }
 
+    public bootstrapInfrastructure() {
+        this.eventPublisher.onAny(this.store.store);
+    }
+
     public configure(router: Router) {
-        router.get("/", this.index);
+        router.get("/api/users", this.listUsers);
     }
 
     /**
-     * The home page route.
+     * List users
      *
      * @class RouteConfigurator
      * @method index
@@ -36,7 +43,7 @@ export class RouteConfigurator {
      * @param res {Response} The express Response object.
      * @next {NextFunction} Execute the next method.
      */
-    public index(req: Request, res: Response, next: NextFunction) {
-        res.json({status:"OK"});
+    public listUsers(req: Request, res: Response, next: NextFunction) {
+        res.json({users:"OK"});
     }
 }

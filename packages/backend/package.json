@@ -2,7 +2,7 @@
   "name": "@fubattle/backend",
   "version": "1.0.0",
   "description": "Backend interface",
-  "main": "src/main",
+  "main": "dist/index.js",
   "scripts": {
     "build": "rimraf dist/ && tsc",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
