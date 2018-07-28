@@ -1,0 +1,31 @@
+{
+  "name": "@fubattle/backend",
+  "version": "1.0.0",
+  "description": "Backend interface",
+  "main": "src/main",
+  "scripts": {
+    "build": "rimraf dist/ && tsc",
+    "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
+    "pretest": "npm run lint",
+    "test": "jest",
+    "start": "node ./bin/www"
+  },
+  "keywords": [],
+  "author": "Alexandre Martinez <alexandre.martinez76@gmail.com> (https://twitter.com/alfmartinez)",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/jest": "^23.3.0",
+    "jest": "^23.4.1",
+    "jest-each": "^23.4.0",
+    "ts-jest": "^23.0.1",
+    "tslint": "^5.11.0",
+    "typescript": "^2.9.2"
+  },
+  "dependencies": {
+    "@types/body-parser": "^1.17.0",
+    "@types/express": "^4.16.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "http": "^0.0.0"
+  }
+}
