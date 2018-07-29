@@ -1,6 +1,5 @@
 import {IdGenerator, DecisionProjection, Aggregable} from "@cqrs-alf/common";
 import {UserId} from "./UserId";
-import {Aggregable} from "../../../cqrs-common/src";
 
 export class UserCreated implements Aggregable {
     userId: UserId;
