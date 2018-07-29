@@ -1,7 +1,8 @@
-import {IdGenerator} from "@cqrs-alf/common";
+import {IdGenerator, DecisionProjection, Aggregable} from "@cqrs-alf/common";
 import {UserId} from "./UserId";
+import {Aggregable} from "../../../cqrs-common/src";
 
-export class UserCreated {
+export class UserCreated implements Aggregable {
     userId: UserId;
     username: string;
 
@@ -12,6 +13,28 @@ export class UserCreated {
 
     public getAggregateId() {
         return this.userId;
+    }
+}
+
+interface IUserState {
+    userId: UserId;
+    username: string;
+}
+
+export class User {
+    projection: DecisionProjection<IUserState> = new DecisionProjection<IUserState>();
+
+    constructor(events: Aggregable | Aggregable[]) {
+        this.projection
+            .register(UserCreated, function(this: IUserState, evt: UserCreated) {
+                this.userId = evt.userId;
+                this.username = evt.username;
+            })
+            .apply(events);
+    }
+
+    getView() {
+        return this.projection.state;
     }
 }
 
