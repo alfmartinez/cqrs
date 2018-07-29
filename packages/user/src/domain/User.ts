@@ -1,5 +1,6 @@
 import {IdGenerator, DecisionProjection, Aggregable} from "@cqrs-alf/common";
 import {UserId} from "./UserId";
+import {SessionId} from "./SessionId";
 
 export class UserCreated implements Aggregable {
     userId: UserId;
@@ -15,9 +16,25 @@ export class UserCreated implements Aggregable {
     }
 }
 
+export class SessionStarted implements Aggregable {
+    userId: UserId;
+    sessionId: SessionId;
+
+    constructor(userId: UserId, sessionId: SessionId) {
+        this.userId = userId;
+        this.sessionId = sessionId;
+    }
+
+    public getAggregateId() {
+        return this.userId;
+    }
+}
+
+
 interface IUserState {
     userId: UserId;
     username: string;
+    sessionId: SessionId;
 }
 
 export class User {
@@ -29,11 +46,23 @@ export class User {
                 this.userId = evt.userId;
                 this.username = evt.username;
             })
+            .register(SessionStarted, function(this: IUserState, evt: SessionStarted){
+                this.sessionId = evt.sessionId;
+            })
             .apply(events);
     }
 
     getView() {
         return this.projection.state;
+    }
+
+    login(publishEvent: (evt:any) => any) {
+        const sessionId = new SessionId(IdGenerator.generate());
+
+        const sessionStarted = new SessionStarted(this.projection.state.userId, sessionId);
+        publishEvent(sessionStarted);
+
+        return sessionId;
     }
 }
 

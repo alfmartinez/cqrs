@@ -24,6 +24,7 @@ export class RouteConfigurator {
     public configure(router: Router) {
         router.post("/api/users", this.createUser);
         router.get("/api/users/:id", this.getUser);
+        router.post("/api/users/:id/login", this.login);
     }
 
     createUser = (req: Request, res: Response, next: NextFunction) => {
@@ -38,6 +39,19 @@ export class RouteConfigurator {
             // @ts-ignore
             const user: User = this.userRepository.getUser(userId);
             res.json(user.getView());
+        } catch (e) {
+            res.json(e);
+        }
+
+    }
+
+    login = (req: Request, res: Response, next: NextFunction) => {
+        const userId = new UserId(req.params.id);
+        try{
+            // @ts-ignore
+            const user: User = this.userRepository.getUser(userId);
+            const sessionId = user.login(this.eventPublisher.publish);
+            res.json(sessionId);
         } catch (e) {
             res.json(e);
         }
