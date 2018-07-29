@@ -4,23 +4,23 @@ export class UserEmailCannotBeEmpty implements Error {
     name: string = "UserEmailCannotBeEmpty";
     message: string;
     constructor() {
-        this.message = 'User email cannot be empty';
+        this.message = 'User id cannot be empty';
     }
 }
 
 export class UserId extends ValueType {
-    public email: string;
+    public id: string;
 
-    constructor(email: string) {
+    constructor(id: string) {
         super();
-        if (!email) {
+        if (!id) {
             throw new UserEmailCannotBeEmpty();
         }
-        this.email = email;
+        this.id = id;
     }
 
     public toString(): string {
-        return "UserId:" + this.email;
+        return "UserId:" + this.id;
     }
 
 }

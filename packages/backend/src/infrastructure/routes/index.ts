@@ -1,22 +1,11 @@
-import { NextFunction, Request, Response, Router } from "express";
+import {NextFunction, Request, Response, Router} from "express";
 import {EventStore, EventPublisher} from "@cqrs-alf/common";
+import {createUser} from "@fubattle/user";
 
-/**
- * / route
- *
- * @class RouteConfigurator
- */
 export class RouteConfigurator {
     private store: EventStore = new EventStore();
     private eventPublisher: EventPublisher = new EventPublisher();
 
-    /**
-     * Create the routes.
-     *
-     * @class RouteConfigurator
-     * @method create
-     * @static
-     */
     public static create(router: Router) {
         //log
         console.log("[RouteConfigurator::create] Creating route configurator.");
@@ -31,19 +20,12 @@ export class RouteConfigurator {
     }
 
     public configure(router: Router) {
-        router.get("/api/users", this.listUsers);
+        router.post("/api/users", this.createUser);
     }
 
-    /**
-     * List users
-     *
-     * @class RouteConfigurator
-     * @method index
-     * @param req {Request} The express Request object.
-     * @param res {Response} The express Response object.
-     * @next {NextFunction} Execute the next method.
-     */
-    public listUsers(req: Request, res: Response, next: NextFunction) {
-        res.json({users:"OK"});
+    createUser = (req: Request, res: Response, next: NextFunction) => {
+        const {username} = req.body;
+        const userId = createUser(this.eventPublisher.publish, username);
+        res.json(userId);
     }
 }
