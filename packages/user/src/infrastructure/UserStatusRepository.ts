@@ -1,19 +1,23 @@
 import {UserStatus} from "../domain/UserStatus";
-import {UserId} from "..";
+import {UserId} from "../domain/UserId";
 
 export class UserStatusRepository {
 
-    remove(userId: UserId) {
+    private projections: Map<UserId, UserStatus> = new Map<UserId, UserStatus>();
 
+    remove(userId: UserId) {
+        this.projections.delete(userId);
     }
 
     save(userStatus: UserStatus) {
-        this.projections.push(userStatus);
+        this.projections.set(userStatus.userId, userStatus);
     }
 
-    private projections: UserStatus[] = [];
-
     getStatuses(): UserStatus[] {
-        return this.projections;
+        const statuses: UserStatus[] = [];
+        for(let status of this.projections.values()) {
+            statuses.push(status);
+        }
+        return statuses;
     }
 }

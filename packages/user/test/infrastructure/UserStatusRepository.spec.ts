@@ -9,17 +9,22 @@ describe("UserStatusRepository", () => {
     const username = "Ralph";
     const sessionId = new SessionId("bar");
     const loggedSince = new Date();
+    const status = new UserStatus(userId, username, sessionId, loggedSince);
 
     beforeEach(() => {
-            repository = new UserStatusRepository();
+        repository = new UserStatusRepository();
+        repository.save(status);
     });
 
     it("should save UserStatus", () => {
-        const status = new UserStatus(userId, username, sessionId, loggedSince);
-        repository.save(status);
-
         const statuses = repository.getStatuses();
         expect(statuses.length).toBe(1);
         expect(statuses).toContain(status);
+    });
+
+    it("should remove UserStatuses for given userId", () => {
+        repository.remove(userId);
+        const statuses = repository.getStatuses();
+        expect(statuses.length).toBe(0);
     })
 })
