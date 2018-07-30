@@ -1,5 +1,6 @@
 import {UserStatus} from "../domain/UserStatus";
 import {UserId} from "../domain/UserId";
+import {SessionId} from "../domain/SessionId";
 
 export class UserStatusRepository {
 
@@ -19,5 +20,12 @@ export class UserStatusRepository {
             statuses.push(status);
         }
         return statuses;
+    }
+
+    hasSession(sessionId: SessionId) {
+        for(let status of this.projections.values()) {
+            if (status.sessionId.equals(sessionId)) return true;
+        }
+        return false;
     }
 }

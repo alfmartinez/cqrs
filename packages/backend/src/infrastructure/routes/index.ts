@@ -1,5 +1,6 @@
 import {EventPublisher, EventStore} from "@cqrs-alf/common";
-import {createUser, User, UserId, UserRepository, UserStatusRepository, UpdateUserStatus} from "@fubattle/user";
+import {createUser, User, UserId, UpdateUserStatus, SessionId} from "@fubattle/user";
+import {UserRepository, UserStatusRepository} from "@fubattle/user";
 import {NextFunction, Request, Response, Router} from "express";
 
 export class RouteConfigurator {
@@ -28,10 +29,23 @@ export class RouteConfigurator {
 
     public configure(router: Router) {
         router.post("/api/users", this.createUser);
-        router.get("/api/users", this.listUsers);
+        router.get("/api/users", this.secure(this.listUsers));
         router.get("/api/users/:id", this.getUser);
         router.post("/api/users/:id/login", this.login);
         router.post("/api/users/:id/logout", this.logout);
+    }
+
+    private secure(func : (req: Request, res: Response, next: NextFunction) => void) {
+        return (req: Request, res: Response, next: NextFunction) => {
+            if (!req.headers.authorization) {
+                return res.sendStatus(401);
+            }
+            const sessionId = new SessionId(req.headers.authorization as string);
+            if (!this.userStatusRepository.hasSession(sessionId)) {
+                return res.sendStatus(403);
+            }
+            return func(req, res, next);
+        }
     }
 
     public createUser = (req: Request, res: Response, next: NextFunction) => {
@@ -81,7 +95,7 @@ export class RouteConfigurator {
     public listUsers = (req: Request, res: Response, next: NextFunction) => {
         try {
             const userStatuses = this.userStatusRepository.getStatuses();
-            res.json(userStatuses);
+            return res.json(userStatuses);
         } catch (e) {
             res.json(e);
         }
