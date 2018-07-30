@@ -49,8 +49,8 @@ export class RouteConfigurator {
     }
 
     public createUser = (req: Request, res: Response, next: NextFunction) => {
-        const {username} = req.body;
-        const userId = createUser(this.eventPublisher.publish, username);
+        const {username, password} = req.body;
+        const userId = createUser(this.eventPublisher.publish, username, password);
         res.json(userId);
     }
 
@@ -68,10 +68,11 @@ export class RouteConfigurator {
 
     public login = (req: Request, res: Response, next: NextFunction) => {
         const userId = new UserId(req.params.id);
+        const password = req.body.password;
         try {
             // @ts-ignore
             const user: User = this.userRepository.getUser(userId);
-            const sessionId = user.login(this.eventPublisher.publish);
+            const sessionId = user.login(this.eventPublisher.publish, password);
             res.json(sessionId);
         } catch (e) {
             res.json(e);
