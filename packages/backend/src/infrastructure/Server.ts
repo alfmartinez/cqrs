@@ -1,8 +1,8 @@
-import * as express from "express";
 import * as bodyParser from "body-parser";
-import * as logger from "morgan";
 import * as cookieParser from "cookie-parser";
 import * as errorHandler from "errorhandler";
+import * as express from "express";
+import * as logger from "morgan";
 import {RouteConfigurator} from "./routes/index";
 
 /**
@@ -11,8 +11,6 @@ import {RouteConfigurator} from "./routes/index";
  * @class Server
  */
 export class Server {
-
-    public app: express.Application;
 
     /**
      * Bootstrap the application.
@@ -26,6 +24,8 @@ export class Server {
         return new Server();
     }
 
+    public app: express.Application;
+
     /**
      * Constructor.
      *
@@ -33,16 +33,16 @@ export class Server {
      * @constructor
      */
     constructor() {
-        //create expressjs application
+        // create expressjs application
         this.app = express();
 
-        //configure application
+        // configure application
         this.config();
 
-        //add routes
+        // add routes
         this.routes();
 
-        //add api
+        // add api
         this.api();
     }
 
@@ -53,7 +53,7 @@ export class Server {
      * @method api
      */
     public api() {
-        //empty for now
+        // empty for now
     }
 
     /**
@@ -63,28 +63,30 @@ export class Server {
      * @method config
      */
     public config() {
-        //mount logger
+        // mount logger
         this.app.use(logger("dev"));
 
-        //mount json form parser
+        // mount json form parser
         this.app.use(bodyParser.json());
 
-        //mount query string parser
+        // mount query string parser
         this.app.use(bodyParser.urlencoded({
-            extended: true
+            extended: true,
         }));
 
-        //mount cookie parser middleware
+        // mount cookie parser middleware
         this.app.use(cookieParser("SECRET_GOES_HERE"));
 
         // catch 404 and forward to error handler
-        this.app.use(function(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
-            err.status = 404;
-            next(err);
-        });
+        this.app.use(this.catch404);
 
-        //error handling
+        // error handling
         this.app.use(errorHandler());
+    }
+
+    public catch404(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
+        err.status = 404;
+        next(err);
     }
 
     /**
@@ -97,10 +99,10 @@ export class Server {
         let router: express.Router;
         router = express.Router();
 
-        //RouteConfigurator
+        // RouteConfigurator
         RouteConfigurator.create(router);
 
-        //use router middleware
+        // use router middleware
         this.app.use(router);
     }
 }

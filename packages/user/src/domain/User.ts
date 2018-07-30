@@ -19,6 +19,24 @@ export class UserCreated implements Aggregable {
 export class SessionStarted implements Aggregable {
     userId: UserId;
     sessionId: SessionId;
+    username: string;
+    date: Date;
+
+    constructor(userId: UserId, sessionId: SessionId, username: string, date: Date) {
+        this.userId = userId;
+        this.sessionId = sessionId;
+        this.username = username;
+        this.date = date;
+    }
+
+    public getAggregateId() {
+        return this.userId;
+    }
+}
+
+export class SessionClosed implements Aggregable {
+    userId: UserId;
+    sessionId: SessionId;
 
     constructor(userId: UserId, sessionId: SessionId) {
         this.userId = userId;
@@ -29,7 +47,6 @@ export class SessionStarted implements Aggregable {
         return this.userId;
     }
 }
-
 
 interface IUserState {
     userId: UserId;
@@ -58,8 +75,8 @@ export class User {
 
     login(publishEvent: (evt:any) => any) {
         const sessionId = new SessionId(IdGenerator.generate());
-
-        const sessionStarted = new SessionStarted(this.projection.state.userId, sessionId);
+        const {userId, username} = this.projection.state;
+        const sessionStarted = new SessionStarted(userId, sessionId, username, new Date());
         publishEvent(sessionStarted);
 
         return sessionId;

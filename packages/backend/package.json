@@ -7,7 +7,6 @@
     "build": "rimraf dist/ && tsc",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
     "pretest": "npm run lint",
-    "test": "jest",
     "start": "node ./bin/www"
   },
   "keywords": [],
