@@ -1,4 +1,4 @@
-import {createUser, SessionStarted, User, UserCreated} from "../../src/domain/User";
+import {createUser, SessionClosed, SessionStarted, User, UserCreated} from "../../src/domain/User";
 import {UserId} from "../../src/domain/UserId";
 import {SessionId} from "../../src/domain/SessionId";
 
@@ -33,7 +33,9 @@ describe("User", () => {
     const username = "Ralph";
     const createdUserEvent = new UserCreated(userId, username);
     const sessionId = new SessionId("boo");
-    const sessionStarted = new SessionStarted(userId, sessionId);
+    const expectedDate = new Date();
+    const sessionStarted = new SessionStarted(userId, sessionId, username, expectedDate);
+    const sessionClosed = new SessionClosed(userId, sessionId);
 
     beforeEach(() => {
         eventsRaised = [];
@@ -48,6 +50,18 @@ describe("User", () => {
         expect(state).toHaveProperty("userId", userId);
         expect(state).toHaveProperty("username", username);
         expect(state).toHaveProperty("sessionId", sessionId);
+        expect(state).toHaveProperty("connected", true);
+    });
+
+    it("When login and logout, should return sessionId, but have attributed connected to false", () => {
+        const events = [createdUserEvent, sessionStarted, sessionClosed];
+        const user: User = new User(events);
+        const state = user.getView();
+
+        expect(state).toHaveProperty("userId", userId);
+        expect(state).toHaveProperty("username", username);
+        expect(state).toHaveProperty("sessionId", sessionId);
+        expect(state).toHaveProperty("connected", false);
     });
 
     it("When login, should return sessionId", () => {
@@ -59,6 +73,21 @@ describe("User", () => {
         expect(eventsRaised.length).toBe(1);
         const actualEvent = eventsRaised[0];
         expect(actualEvent).toBeInstanceOf(SessionStarted);
+        expect(actualEvent).toHaveProperty("userId", userId);
+        expect(actualEvent).toHaveProperty("sessionId", sessionId);
+        expect(actualEvent).toHaveProperty("username", username);
+        expect(actualEvent).toHaveProperty("date");
+
+    });
+
+    it("When logout, should publish SessionClosed", () => {
+        const events = [createdUserEvent, sessionStarted];
+        const user: User = new User(events);
+        user.logout(publishEvent);
+
+        expect(eventsRaised.length).toBe(1);
+        const actualEvent = eventsRaised[0];
+        expect(actualEvent).toBeInstanceOf(SessionClosed);
         expect(actualEvent).toHaveProperty("userId", userId);
         expect(actualEvent).toHaveProperty("sessionId", sessionId);
 

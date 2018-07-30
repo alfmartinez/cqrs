@@ -52,6 +52,7 @@ interface IUserState {
     userId: UserId;
     username: string;
     sessionId: SessionId;
+    connected: boolean;
 }
 
 export class User {
@@ -65,6 +66,11 @@ export class User {
             })
             .register(SessionStarted, function(this: IUserState, evt: SessionStarted){
                 this.sessionId = evt.sessionId;
+                this.connected = true;
+            })
+            .register(SessionClosed, function(this: IUserState, evt: SessionClosed){
+                this.sessionId = evt.sessionId;
+                this.connected = false;
             })
             .apply(events);
     }
@@ -73,13 +79,19 @@ export class User {
         return this.projection.state;
     }
 
-    login(publishEvent: (evt:any) => any) {
+    login(publishEvent: (evt:any) => any): SessionId {
         const sessionId = new SessionId(IdGenerator.generate());
         const {userId, username} = this.projection.state;
         const sessionStarted = new SessionStarted(userId, sessionId, username, new Date());
         publishEvent(sessionStarted);
 
         return sessionId;
+    }
+
+    logout(publishEvent: (evt: any) => any): void {
+        const {userId, sessionId} = this.projection.state;
+        const sessionClosed = new SessionClosed(userId, sessionId);
+        publishEvent(sessionClosed);
     }
 }
 
