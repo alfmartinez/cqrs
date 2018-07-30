@@ -5,10 +5,12 @@ import {SessionId} from "./SessionId";
 export class UserCreated implements Aggregable {
     userId: UserId;
     username: string;
+    password: string;
 
-    constructor(userId: UserId, username: string) {
+    constructor(userId: UserId, username: string, password: string) {
         this.userId = userId;
         this.username = username;
+        this.password = password;
     }
 
     public getAggregateId() {
@@ -51,8 +53,18 @@ export class SessionClosed implements Aggregable {
 interface IUserState {
     userId: UserId;
     username: string;
+    password: string;
     sessionId: SessionId;
     connected: boolean;
+}
+
+export class AuthenticationError implements Error {
+    message: string;
+    name: string = "AuthenticationError";
+
+    constructor(message: string) {
+        this.message = message;
+    }
 }
 
 export class User {
@@ -63,6 +75,7 @@ export class User {
             .register(UserCreated, function(this: IUserState, evt: UserCreated) {
                 this.userId = evt.userId;
                 this.username = evt.username;
+                this.password = evt.password;
             })
             .register(SessionStarted, function(this: IUserState, evt: SessionStarted){
                 this.sessionId = evt.sessionId;
@@ -79,7 +92,10 @@ export class User {
         return this.projection.state;
     }
 
-    login(publishEvent: (evt:any) => any): SessionId {
+    login(publishEvent: (evt:any) => any, password: string): SessionId {
+        if (password !== this.projection.state.password) {
+            throw new AuthenticationError("Authentication failed");
+        }
         const sessionId = new SessionId(IdGenerator.generate());
         const {userId, username} = this.projection.state;
         const sessionStarted = new SessionStarted(userId, sessionId, username, new Date());
@@ -95,9 +111,9 @@ export class User {
     }
 }
 
-export function createUser(publishEvent: (evt: any) => any, username: string) {
+export function createUser(publishEvent: (evt: any) => any, username: string, password: string) {
     const userId = new UserId(IdGenerator.generate());
-    publishEvent(new UserCreated(userId,username));
+    publishEvent(new UserCreated(userId,username, password));
     return userId;
 
 }
