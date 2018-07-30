@@ -8,6 +8,7 @@ export class UserStatus {
     loggedSince: Date;
 
     constructor(userId: UserId, username: string, sessionId: SessionId, loggedSince: Date) {
+        console.log("Username", username);
         this.userId = userId;
         this.username = username;
         this.sessionId = sessionId;
