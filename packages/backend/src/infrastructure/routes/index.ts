@@ -28,11 +28,14 @@ export class RouteConfigurator {
     }
 
     public configure(router: Router) {
+        // Public routes
         router.post("/api/users", this.createUser);
-        router.get("/api/users", this.secure(this.listUsers));
-        router.get("/api/users/:id", this.getUser);
         router.post("/api/users/:id/login", this.login);
-        router.post("/api/users/:id/logout", this.logout);
+
+        // Secured routes
+        router.get("/api/users", this.secure(this.listUsers));
+        router.get("/api/users/:id", this.secure(this.getUser));
+        router.post("/api/users/:id/logout", this.secure(this.logout));
     }
 
     public createUser = (req: Request, res: Response, next: NextFunction) => {
@@ -65,9 +68,9 @@ export class RouteConfigurator {
             // @ts-ignore
             const user: User = this.userRepository.getUser(userId);
             const sessionId = user.login(this.eventPublisher.publish, password);
-            res.json(sessionId);
+            res.status(201).json(sessionId);
         } catch (e) {
-            res.json(e);
+            res.status(403).json(e);
         }
 
     }

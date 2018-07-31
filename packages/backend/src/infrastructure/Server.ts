@@ -77,16 +77,8 @@ export class Server {
         // mount cookie parser middleware
         this.app.use(cookieParser("SECRET_GOES_HERE"));
 
-        // catch 404 and forward to error handler
-        this.app.use(this.catch404);
-
         // error handling
         this.app.use(errorHandler());
-    }
-
-    public catch404(err: any, req: express.Request, res: express.Response, next: express.NextFunction) {
-        err.status = 404;
-        next(err);
     }
 
     /**
