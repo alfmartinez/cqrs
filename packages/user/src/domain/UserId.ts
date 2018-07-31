@@ -1,10 +1,10 @@
 import {ValueType} from "@cqrs-alf/common";
 
 export class UserEmailCannotBeEmpty implements Error {
-    name: string = "UserEmailCannotBeEmpty";
-    message: string;
+    public name: string = "UserEmailCannotBeEmpty";
+    public message: string;
     constructor() {
-        this.message = 'User id cannot be empty';
+        this.message = "User id cannot be empty";
     }
 }
 

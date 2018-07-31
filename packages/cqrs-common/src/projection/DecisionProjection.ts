@@ -1,4 +1,4 @@
-import {Aggregable} from "../event/Aggregable";
+import {IAggregable} from "../event/IAggregable";
 
 export class DecisionProjection<T> {
 
@@ -10,7 +10,7 @@ export class DecisionProjection<T> {
         return this;
     }
 
-    public apply(events: Aggregable[] | Aggregable): DecisionProjection<T> {
+    public apply(events: IAggregable[] | IAggregable): DecisionProjection<T> {
         if (events instanceof Array) {
             events.forEach((singleEvent: any) => this.apply.call(this, singleEvent));
             return this;

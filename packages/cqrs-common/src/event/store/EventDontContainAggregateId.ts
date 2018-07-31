@@ -1,6 +1,6 @@
 export class EventDontContainAggregateId implements Error {
-    name: string = "EventDontContainAggregateId";
-    message: string;
+    public name: string = "EventDontContainAggregateId";
+    public message: string;
     public eventName: string;
     constructor(eventName: string) {
         this.eventName = eventName;

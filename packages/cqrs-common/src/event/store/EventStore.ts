@@ -1,10 +1,10 @@
+import {IAggregable} from "../IAggregable";
 import {EventDontContainAggregateId} from "./EventDontContainAggregateId";
-import {Aggregable} from "../Aggregable";
 
 export class EventStore {
     public events: any[] = [];
 
-    public store = (event: Aggregable) => {
+    public store = (event: IAggregable) => {
         if (!event.getAggregateId) {
             throw new EventDontContainAggregateId(event.constructor.name);
         }

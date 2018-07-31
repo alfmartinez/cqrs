@@ -1,11 +1,11 @@
-import {IdGenerator, DecisionProjection, Aggregable} from "@cqrs-alf/common";
-import {UserId} from "./UserId";
+import {Aggregable, DecisionProjection, IdGenerator} from "@cqrs-alf/common";
 import {SessionId} from "./SessionId";
+import {UserId} from "./UserId";
 
 export class UserCreated implements Aggregable {
-    userId: UserId;
-    username: string;
-    password: string;
+    public userId: UserId;
+    public username: string;
+    public password: string;
 
     constructor(userId: UserId, username: string, password: string) {
         this.userId = userId;
@@ -19,10 +19,10 @@ export class UserCreated implements Aggregable {
 }
 
 export class SessionStarted implements Aggregable {
-    userId: UserId;
-    sessionId: SessionId;
-    username: string;
-    date: Date;
+    public userId: UserId;
+    public sessionId: SessionId;
+    public username: string;
+    public date: Date;
 
     constructor(userId: UserId, sessionId: SessionId, username: string, date: Date) {
         this.userId = userId;
@@ -37,8 +37,8 @@ export class SessionStarted implements Aggregable {
 }
 
 export class SessionClosed implements Aggregable {
-    userId: UserId;
-    sessionId: SessionId;
+    public userId: UserId;
+    public sessionId: SessionId;
 
     constructor(userId: UserId, sessionId: SessionId) {
         this.userId = userId;
@@ -59,8 +59,8 @@ interface IUserState {
 }
 
 export class AuthenticationError implements Error {
-    message: string;
-    name: string = "AuthenticationError";
+    public message: string;
+    public name: string = "AuthenticationError";
 
     constructor(message: string) {
         this.message = message;
@@ -68,7 +68,7 @@ export class AuthenticationError implements Error {
 }
 
 export class User {
-    projection: DecisionProjection<IUserState> = new DecisionProjection<IUserState>();
+    public projection: DecisionProjection<IUserState> = new DecisionProjection<IUserState>();
 
     constructor(events: Aggregable | Aggregable[]) {
         this.projection
@@ -77,22 +77,22 @@ export class User {
                 this.username = evt.username;
                 this.password = evt.password;
             })
-            .register(SessionStarted, function(this: IUserState, evt: SessionStarted){
+            .register(SessionStarted, function(this: IUserState, evt: SessionStarted) {
                 this.sessionId = evt.sessionId;
                 this.connected = true;
             })
-            .register(SessionClosed, function(this: IUserState, evt: SessionClosed){
+            .register(SessionClosed, function(this: IUserState, evt: SessionClosed) {
                 this.sessionId = evt.sessionId;
                 this.connected = false;
             })
             .apply(events);
     }
 
-    getView() {
+    public getView() {
         return this.projection.state;
     }
 
-    login(publishEvent: (evt:any) => any, password: string): SessionId {
+    public login(publishEvent: (evt: any) => any, password: string): SessionId {
         if (password !== this.projection.state.password) {
             throw new AuthenticationError("Authentication failed");
         }
@@ -104,7 +104,7 @@ export class User {
         return sessionId;
     }
 
-    logout(publishEvent: (evt: any) => any): void {
+    public logout(publishEvent: (evt: any) => any): void {
         const {userId, sessionId} = this.projection.state;
         const sessionClosed = new SessionClosed(userId, sessionId);
         publishEvent(sessionClosed);
@@ -113,7 +113,7 @@ export class User {
 
 export function createUser(publishEvent: (evt: any) => any, username: string, password: string) {
     const userId = new UserId(IdGenerator.generate());
-    publishEvent(new UserCreated(userId,username, password));
+    publishEvent(new UserCreated(userId, username, password));
     return userId;
 
 }

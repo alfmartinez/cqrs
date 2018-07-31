@@ -14,7 +14,7 @@ export class EventPublisher {
         return this;
     }
 
-    public on(eventType: any, action: (event:any) => void) {
+    public on(eventType: any, action: (event: any) => void) {
         this.eventEmitter.on(eventType.name, action);
         return this;
     }

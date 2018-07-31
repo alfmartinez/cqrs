@@ -1,72 +1,71 @@
-import {Aggregable, IdGenerator, ValueType, DecisionProjection} from "@cqrs-alf/common";
+import {Aggregable, DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
 import {CharacterId} from "@fubattle/character";
 
-
 export class TeamId extends ValueType {
-    teamId: string;
+    public teamId: string;
 
     constructor(id: string) {
         super();
         this.teamId = id;
     }
 
-    toString() {
+    public toString() {
         return "Team: " + this.teamId;
     }
 }
 
 export class TeamCreated implements Aggregable {
-    teamId: TeamId;
+    public teamId: TeamId;
 
     constructor(teamId: TeamId) {
         this.teamId = teamId;
     }
 
-    getAggregateId(): any {
+    public getAggregateId(): any {
         return this.teamId;
     }
 }
 
 export class MemberAdded implements Aggregable {
-    teamId: TeamId;
-    member: CharacterId;
+    public teamId: TeamId;
+    public member: CharacterId;
 
     constructor(teamId: TeamId, member: CharacterId) {
         this.teamId = teamId;
         this.member = member;
     }
 
-    getAggregateId(): TeamId {
+    public getAggregateId(): TeamId {
         return this.teamId;
     }
 }
 
-interface TeamView {
+interface ITeamView {
     teamId: TeamId;
     members: CharacterId[];
 }
 
 export class Team {
-    projection: DecisionProjection<TeamView> = new DecisionProjection<TeamView>();
+    public projection: DecisionProjection<ITeamView> = new DecisionProjection<ITeamView>();
 
     constructor(events: Aggregable[] | Aggregable) {
         this.projection
-            .register(TeamCreated, function (this: TeamView, evt: TeamCreated) {
+            .register(TeamCreated, function(this: ITeamView, evt: TeamCreated) {
                 this.teamId = evt.teamId;
                 this.members = [];
             })
-            .register(MemberAdded, function (this: TeamView, evt: MemberAdded) {
+            .register(MemberAdded, function(this: ITeamView, evt: MemberAdded) {
                 this.members.push(evt.member);
             })
             .apply(events);
     }
 
-    getView(): TeamView {
+    public getView(): ITeamView {
         return this.projection.state;
     }
 
-    addMember(publishEvent: (evt: any) => void, characterId: CharacterId) {
-        if (this.projection.state.members.length>5) {
+    public addMember(publishEvent: (evt: any) => void, characterId: CharacterId) {
+        if (this.projection.state.members.length > 5) {
             throw new Error("Team is full");
         }
         const addedMember = new MemberAdded(this.projection.state.teamId, characterId);

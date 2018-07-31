@@ -4,6 +4,20 @@
         "tslint:recommended"
     ],
     "jsRules": {},
-    "rules": {},
+    "rules": {
+        "max-classes-per-file": [
+            false
+        ],
+        "only-arrow-functions": [
+            true,
+            "allow-declarations",
+            "allow-named-functions"
+        ],
+        "no-console": [
+            true,
+            "log",
+            "error"
+        ]
+    },
     "rulesDirectory": []
 }

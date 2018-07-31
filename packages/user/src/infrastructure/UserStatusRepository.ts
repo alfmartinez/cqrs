@@ -1,30 +1,30 @@
-import {UserStatus} from "../domain/UserStatus";
-import {UserId} from "../domain/UserId";
 import {SessionId} from "../domain/SessionId";
+import {UserId} from "../domain/UserId";
+import {UserStatus} from "../domain/UserStatus";
 
 export class UserStatusRepository {
 
     private projections: Map<UserId, UserStatus> = new Map<UserId, UserStatus>();
 
-    remove(userId: UserId) {
+    public remove(userId: UserId) {
         this.projections.delete(userId);
     }
 
-    save(userStatus: UserStatus) {
+    public save(userStatus: UserStatus) {
         this.projections.set(userStatus.userId, userStatus);
     }
 
-    getStatuses(): UserStatus[] {
+    public getStatuses(): UserStatus[] {
         const statuses: UserStatus[] = [];
-        for(let status of this.projections.values()) {
+        for (const status of this.projections.values()) {
             statuses.push(status);
         }
         return statuses;
     }
 
-    hasSession(sessionId: SessionId) {
-        for(let status of this.projections.values()) {
-            if (status.sessionId.equals(sessionId)) return true;
+    public hasSession(sessionId: SessionId) {
+        for (const status of this.projections.values()) {
+            if (status.sessionId.equals(sessionId)) { return true; }
         }
         return false;
     }

@@ -1,5 +1,5 @@
-import {UserStatusRepository} from "../infrastructure/UserStatusRepository";
 import {EventPublisher} from "@cqrs-alf/common";
+import {UserStatusRepository} from "../infrastructure/UserStatusRepository";
 import {SessionClosed, SessionStarted} from "./User";
 import {UserStatus} from "./UserStatus";
 
@@ -9,13 +9,13 @@ export class UpdateUserStatus {
         this.repository = userStatusRepository;
     }
 
-    register(eventPublisher: EventPublisher) {
+    public register(eventPublisher: EventPublisher) {
         eventPublisher.on(SessionStarted, (event: SessionStarted) => {
             this.removeProjection(event);
             this.saveProjection(event);
         }).on(SessionClosed, (event: SessionClosed) => {
             this.removeProjection(event);
-        })
+        });
     }
 
     private removeProjection(event: SessionClosed | SessionStarted) {

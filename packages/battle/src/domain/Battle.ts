@@ -1,46 +1,46 @@
-import {ValueType, IdGenerator, Aggregable, DecisionProjection} from "@cqrs-alf/common";
+import {Aggregable, DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
 
 export class BattleId extends ValueType {
-    battleId: string;
+    public battleId: string;
 
     constructor(id: string) {
         super();
         this.battleId = id;
     }
 
-    toString() {
+    public toString() {
         return "Battle: " + this.battleId;
     }
 }
 
 export class BattleCreated implements Aggregable {
-    battleId: BattleId;
+    public battleId: BattleId;
 
     constructor(battleId: BattleId) {
         this.battleId = battleId;
     }
 
-    getAggregateId(): any {
+    public getAggregateId(): any {
         return this.battleId;
     }
 }
 
-interface BattleView {
+interface IBattleView {
     battleId: BattleId;
 }
 
 export class Battle {
-    projection: DecisionProjection<BattleView> = new DecisionProjection<BattleView>()
+    public projection: DecisionProjection<IBattleView> = new DecisionProjection<IBattleView>();
 
     constructor(events: Aggregable[] | Aggregable) {
         this.projection
-            .register(BattleCreated, function (this: BattleView, evt: BattleCreated) {
+            .register(BattleCreated, function(this: IBattleView, evt: BattleCreated) {
                 this.battleId = evt.battleId;
             })
             .apply(events);
     }
 
-    getView() {
+    public getView() {
         return this.projection.state;
     }
 }

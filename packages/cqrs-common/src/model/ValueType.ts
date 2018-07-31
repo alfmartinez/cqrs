@@ -1,7 +1,5 @@
 export abstract class ValueType {
 
-    constructor(){}
-
     public equals(other: any) {
         if (!other) {
             return false;
