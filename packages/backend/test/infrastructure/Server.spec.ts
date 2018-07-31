@@ -2,7 +2,6 @@ import * as request from "supertest";
 import {Server} from "../../src/infrastructure/Server";
 
 
-
 describe("Backend Server", () => {
     const app = Server.bootstrap().app;
     const password = "foo";
@@ -35,6 +34,13 @@ describe("Backend Server", () => {
             });
     }
 
+    function getSessionId(username, password) {
+        return createUser(username, password)
+            .then(userId => {
+                return loginUser(userId, password);
+            });
+    }
+
     describe("ErrorHandler", () => {
         it("should return proper 404", () => {
             return request(app).get('/foo')
@@ -64,10 +70,9 @@ describe("Backend Server", () => {
     });
 
 
-
     describe("LoginUser", () => {
         it("should perform login for user", () => {
-            return createUser(username,password)
+            return createUser(username, password)
                 .then(userId => {
                     const sessionId = loginUser(userId, password);
                     expect(sessionId).toBeDefined();
@@ -75,7 +80,7 @@ describe("Backend Server", () => {
         });
 
         it("should fail if password is wrong", () => {
-            return createUser(username,wrongPassword)
+            return createUser(username, wrongPassword)
                 .then(userId => {
                     return doLogin(userId, password)
                         .expect(403);
@@ -88,5 +93,43 @@ describe("Backend Server", () => {
         });
 
     });
+
+    describe("GetUsers", () => {
+        it("should return unauthorized if not authenticated", () => {
+            return getSessionId(username, password)
+                .then(sessionId => {
+                    return request(app).get('/api/users')
+                        .set("Content-Type", "application/json")
+                        .set('Accept', 'application/json')
+                        .expect(401);
+                })
+        });
+
+        it("should return Forbidden if authorization is wrong", () => {
+            return getSessionId(username, password)
+                .then(sessionId => {
+                    return request(app).get('/api/users')
+                        .set("Content-Type", "application/json")
+                        .set('Authorization', "foo")
+                        .set('Accept', 'application/json')
+                        .expect(403);
+                })
+        });
+
+        it("should return user data if authenticated", () => {
+            return getSessionId(username, password)
+                .then(sessionId => {
+                    return request(app).get('/api/users')
+                        .set("Content-Type", "application/json")
+                        .set('Accept', 'application/json')
+                        .set('Authorization', sessionId)
+                        .expect(200)
+                        .then((response) => {
+                            const {body} = response;
+                            expect(body).toBeInstanceOf(Array);
+                        });
+                })
+        });
+    })
 
 })
