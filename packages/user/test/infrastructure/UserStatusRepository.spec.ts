@@ -19,7 +19,9 @@ describe("UserStatusRepository", () => {
     it("should save UserStatus", () => {
         const statuses = repository.getStatuses();
         expect(statuses.length).toBe(1);
-        expect(statuses).toContain(status);
+        const expectedStatus = Object.assign({}, status);
+        delete expectedStatus.sessionId;
+        expect(statuses).toContainEqual(expectedStatus);
     });
 
     it("should remove UserStatuses for given userId", () => {

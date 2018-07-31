@@ -1,4 +1,4 @@
-import {IAggregable, DecisionProjection, IdGenerator} from "@cqrs-alf/common";
+import {DecisionProjection, IAggregable, IdGenerator} from "@cqrs-alf/common";
 import {SessionId} from "./SessionId";
 import {UserId} from "./UserId";
 

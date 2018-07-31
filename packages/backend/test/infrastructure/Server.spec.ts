@@ -127,6 +127,12 @@ describe("Backend Server", () => {
                         .then((response) => {
                             const {body} = response;
                             expect(body).toBeInstanceOf(Array);
+                            body.forEach((status)=> {
+                                expect(status).toHaveProperty("userId");
+                                expect(status).toHaveProperty("username");
+                                expect(status).toHaveProperty("loggedSince");
+                                expect(status).not.toHaveProperty("sessionId");
+                            })
                         });
                 })
         });
@@ -202,6 +208,22 @@ describe("Backend Server", () => {
                         });
                 })
         });
+    });
+
+    describe("Logout", () => {
+        it("should return 205 Refresh if successful logout", () => {
+            let actualUserId;
+            return createUser(username, password)
+                .then(userId => {
+                    actualUserId = userId;
+                    return loginUser(userId, password);
+                })
+                .then(sessionId => {
+                    return request(app).post("/api/users/"+ actualUserId + "/logout")
+                        .set('Authorization', sessionId)
+                        .expect(205);
+                })
+        })
     })
 
 })

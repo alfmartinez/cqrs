@@ -17,7 +17,9 @@ export class UserStatusRepository {
     public getStatuses(): UserStatus[] {
         const statuses: UserStatus[] = [];
         for (const status of this.projections.values()) {
-            statuses.push(status);
+            const safeStatus = Object.assign({}, status);
+            delete safeStatus.sessionId;
+            statuses.push(safeStatus);
         }
         return statuses;
     }

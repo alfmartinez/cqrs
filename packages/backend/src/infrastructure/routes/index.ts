@@ -74,15 +74,10 @@ export class RouteConfigurator {
 
     public logout = (req: Request, res: Response, next: NextFunction) => {
         const userId = new UserId(req.params.id);
-        try {
-            // @ts-ignore
-            const user: User = this.userRepository.getUser(userId);
-            const sessionId = user.logout(this.eventPublisher.publish);
-            res.json(sessionId);
-        } catch (e) {
-            res.json(e);
-        }
-
+        // @ts-ignore
+        const user: User = this.userRepository.getUser(userId);
+        user.logout(this.eventPublisher.publish);
+        res.sendStatus(205);
     }
 
     public listUsers = (req: Request, res: Response, next: NextFunction) => {
