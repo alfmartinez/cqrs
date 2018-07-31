@@ -164,6 +164,22 @@ describe("Backend Server", () => {
                 })
         });
 
+        it("should return Forbidden if user is wrong", () => {
+            let userId;
+            return createUser(username, password)
+                .then(userId => {
+                    userId = userId;
+                    return loginUser(userId, password);
+                })
+                .then(sessionId => {
+                    return request(app).get('/api/users/' + "baz")
+                        .set("Content-Type", "application/json")
+                        .set('Accept', 'application/json')
+                        .set('Authorization', "foo")
+                        .expect(403);
+                })
+        });
+
         it("should return user data if authorization is ok", () => {
             let actualUserId;
             return createUser(username, password)

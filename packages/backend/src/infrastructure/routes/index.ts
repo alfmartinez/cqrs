@@ -51,16 +51,11 @@ export class RouteConfigurator {
 
     public getUser = (req: Request, res: Response, next: NextFunction) => {
         const userId = new UserId(req.params.id);
-        try {
-            // @ts-ignore
-            const user: User = this.userRepository.getUser(userId);
-            const view = user.getView();
-            delete view.password;
-            res.json(view);
-        } catch (e) {
-            res.json(e);
-        }
-
+        // @ts-ignore
+        const user: User = this.userRepository.getUser(userId);
+        const view = user.getView();
+        delete view.password;
+        res.json(view);
     }
 
     public login = (req: Request, res: Response, next: NextFunction) => {
