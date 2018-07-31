@@ -1,4 +1,4 @@
-import {Aggregable, DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
+import {IAggregable, DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
 import {CharacterId} from "@fubattle/character";
 
 export class TeamId extends ValueType {
@@ -14,7 +14,7 @@ export class TeamId extends ValueType {
     }
 }
 
-export class TeamCreated implements Aggregable {
+export class TeamCreated implements IAggregable {
     public teamId: TeamId;
 
     constructor(teamId: TeamId) {
@@ -26,7 +26,7 @@ export class TeamCreated implements Aggregable {
     }
 }
 
-export class MemberAdded implements Aggregable {
+export class MemberAdded implements IAggregable {
     public teamId: TeamId;
     public member: CharacterId;
 
@@ -48,7 +48,7 @@ interface ITeamView {
 export class Team {
     public projection: DecisionProjection<ITeamView> = new DecisionProjection<ITeamView>();
 
-    constructor(events: Aggregable[] | Aggregable) {
+    constructor(events: IAggregable[] | IAggregable) {
         this.projection
             .register(TeamCreated, function(this: ITeamView, evt: TeamCreated) {
                 this.teamId = evt.teamId;
@@ -74,7 +74,7 @@ export class Team {
     }
 }
 
-export function createTeam(publishEvent: (evt: Aggregable) => void) {
+export function createTeam(publishEvent: (evt: IAggregable) => void) {
     const teamId = new TeamId(IdGenerator.generate());
     const battleCreated = new TeamCreated(teamId);
     publishEvent(battleCreated);

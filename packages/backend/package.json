@@ -7,6 +7,7 @@
     "build": "rimraf dist/ && tsc",
     "lint": "tslint -c tslint.json 'src/**/*.{ts,tsx}' --fix",
     "pretest": "npm run lint",
+    "test": "jest",
     "start": "node ./bin/www"
   },
   "keywords": [],
@@ -14,8 +15,10 @@
   "license": "ISC",
   "devDependencies": {
     "@types/jest": "^23.3.0",
+    "@types/supertest": "^2.0.5",
     "jest": "^23.4.1",
     "jest-each": "^23.4.0",
+    "supertest": "^3.1.0",
     "ts-jest": "^23.0.1",
     "tslint": "^5.11.0",
     "typescript": "^2.9.2"
@@ -34,5 +37,22 @@
     "morgan": "^1.9.0",
     "@cqrs-alf/common": "1.0.0",
     "@fubattle/user": "1.0.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageReporters": [
+      "json",
+      "html"
+    ],
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js"
+    ],
+    "transform": {
+      "\\.(ts|tsx)$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testURL": "http://localhost/",
+    "testRegex": ".*\\.spec\\.(ts|tsx|js)$"
   }
 }

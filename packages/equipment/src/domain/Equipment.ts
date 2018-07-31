@@ -1,4 +1,4 @@
-import {Aggregable, DecisionProjection} from "@cqrs-alf/common";
+import {IAggregable, DecisionProjection} from "@cqrs-alf/common";
 import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
 import {Item} from "./Item";
 import {createItemSet} from "./ItemSet";
@@ -35,7 +35,7 @@ export class SlotNotEquipped implements Error {
     }
 }
 
-export class ItemEquipped implements Aggregable {
+export class ItemEquipped implements IAggregable {
     public characterId: CharacterId;
     public slot: number;
     public item: Item;
@@ -51,7 +51,7 @@ export class ItemEquipped implements Aggregable {
     }
 }
 
-export class EquipmentUpgraded implements Aggregable {
+export class EquipmentUpgraded implements IAggregable {
     public characterId: CharacterId;
     public level: EquipmentLevel;
 

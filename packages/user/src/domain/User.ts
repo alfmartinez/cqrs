@@ -1,8 +1,8 @@
-import {Aggregable, DecisionProjection, IdGenerator} from "@cqrs-alf/common";
+import {IAggregable, DecisionProjection, IdGenerator} from "@cqrs-alf/common";
 import {SessionId} from "./SessionId";
 import {UserId} from "./UserId";
 
-export class UserCreated implements Aggregable {
+export class UserCreated implements IAggregable {
     public userId: UserId;
     public username: string;
     public password: string;
@@ -18,7 +18,7 @@ export class UserCreated implements Aggregable {
     }
 }
 
-export class SessionStarted implements Aggregable {
+export class SessionStarted implements IAggregable {
     public userId: UserId;
     public sessionId: SessionId;
     public username: string;
@@ -36,7 +36,7 @@ export class SessionStarted implements Aggregable {
     }
 }
 
-export class SessionClosed implements Aggregable {
+export class SessionClosed implements IAggregable {
     public userId: UserId;
     public sessionId: SessionId;
 
@@ -70,7 +70,7 @@ export class AuthenticationError implements Error {
 export class User {
     public projection: DecisionProjection<IUserState> = new DecisionProjection<IUserState>();
 
-    constructor(events: Aggregable | Aggregable[]) {
+    constructor(events: IAggregable | IAggregable[]) {
         this.projection
             .register(UserCreated, function(this: IUserState, evt: UserCreated) {
                 this.userId = evt.userId;

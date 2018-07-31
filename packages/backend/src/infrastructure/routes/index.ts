@@ -1,5 +1,5 @@
 import {EventPublisher, EventStore} from "@cqrs-alf/common";
-import {createUser, User, UserId, UpdateUserStatus, SessionId} from "@fubattle/user";
+import {createUser, SessionId, UpdateUserStatus, User, UserId} from "@fubattle/user";
 import {UserRepository, UserStatusRepository} from "@fubattle/user";
 import {NextFunction, Request, Response, Router} from "express";
 
@@ -35,23 +35,15 @@ export class RouteConfigurator {
         router.post("/api/users/:id/logout", this.logout);
     }
 
-    private secure(func : (req: Request, res: Response, next: NextFunction) => void) {
-        return (req: Request, res: Response, next: NextFunction) => {
-            if (!req.headers.authorization) {
-                return res.sendStatus(401);
-            }
-            const sessionId = new SessionId(req.headers.authorization as string);
-            if (!this.userStatusRepository.hasSession(sessionId)) {
-                return res.sendStatus(403);
-            }
-            return func(req, res, next);
-        }
-    }
-
     public createUser = (req: Request, res: Response, next: NextFunction) => {
         const {username, password} = req.body;
+        if (!username || !password) {
+            return res.sendStatus(400);
+        }
         const userId = createUser(this.eventPublisher.publish, username, password);
-        res.json(userId);
+        res
+            .status(201)
+            .json(userId);
     }
 
     public getUser = (req: Request, res: Response, next: NextFunction) => {
@@ -101,5 +93,18 @@ export class RouteConfigurator {
             res.json(e);
         }
 
+    }
+
+    private secure(func: (req: Request, res: Response, next: NextFunction) => void) {
+        return (req: Request, res: Response, next: NextFunction) => {
+            if (!req.headers.authorization) {
+                return res.sendStatus(401);
+            }
+            const sessionId = new SessionId(req.headers.authorization as string);
+            if (!this.userStatusRepository.hasSession(sessionId)) {
+                return res.sendStatus(403);
+            }
+            return func(req, res, next);
+        };
     }
 }
