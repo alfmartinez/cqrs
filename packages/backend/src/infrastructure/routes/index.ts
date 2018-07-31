@@ -81,13 +81,8 @@ export class RouteConfigurator {
     }
 
     public listUsers = (req: Request, res: Response, next: NextFunction) => {
-        try {
-            const userStatuses = this.userStatusRepository.getStatuses();
-            return res.json(userStatuses);
-        } catch (e) {
-            res.json(e);
-        }
-
+        const userStatuses = this.userStatusRepository.getStatuses();
+        return res.json(userStatuses);
     }
 
     private secure(func: (req: Request, res: Response, next: NextFunction) => void) {
