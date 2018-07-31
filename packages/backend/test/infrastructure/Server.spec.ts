@@ -130,6 +130,62 @@ describe("Backend Server", () => {
                         });
                 })
         });
+    });
+
+    describe("GetUser", () => {
+        it("should return unauthorized if not authenticated", () => {
+            let userId;
+            return createUser(username, password)
+                .then(userId => {
+                    userId = userId;
+                    return loginUser(userId, password);
+                })
+                .then(sessionId => {
+                    return request(app).get('/api/users/' + userId)
+                        .set("Content-Type", "application/json")
+                        .set('Accept', 'application/json')
+                        .expect(401);
+                })
+        });
+
+        it("should return Forbidden if authorization is wrong", () => {
+            let userId;
+            return createUser(username, password)
+                .then(userId => {
+                    userId = userId;
+                    return loginUser(userId, password);
+                })
+                .then(sessionId => {
+                    return request(app).get('/api/users/' + userId)
+                        .set("Content-Type", "application/json")
+                        .set('Accept', 'application/json')
+                        .set('Authorization', "foo")
+                        .expect(403);
+                })
+        });
+
+        it("should return user data if authorization is ok", () => {
+            let actualUserId;
+            return createUser(username, password)
+                .then(userId => {
+                    actualUserId = userId;
+                    return loginUser(userId, password);
+                })
+                .then(sessionId => {
+                    return request(app).get('/api/users/' + actualUserId)
+                        .set("Content-Type", "application/json")
+                        .set('Accept', 'application/json')
+                        .set('Authorization', sessionId)
+                        .expect(200)
+                        .then(({body}) => {
+                            expect(body).toHaveProperty("connected", true);
+                            expect(body).not.toHaveProperty("password");
+                            expect(body).toHaveProperty("userId", {id: actualUserId});
+                            expect(body).toHaveProperty("sessionId", {id: sessionId});
+                            expect(body).toHaveProperty("username", username);
+                        });
+                })
+        });
     })
 
 })

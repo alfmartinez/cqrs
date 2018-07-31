@@ -54,7 +54,9 @@ export class RouteConfigurator {
         try {
             // @ts-ignore
             const user: User = this.userRepository.getUser(userId);
-            res.json(user.getView());
+            const view = user.getView();
+            delete view.password;
+            res.json(view);
         } catch (e) {
             res.json(e);
         }
