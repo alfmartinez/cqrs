@@ -66,7 +66,7 @@ describe("UserRoutes", () => {
                     const {body} = response;
                     expect(body).toHaveProperty("id");
                 });
-        })
+        });
     });
 
 

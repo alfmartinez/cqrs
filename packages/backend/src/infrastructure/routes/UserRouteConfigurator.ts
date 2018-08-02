@@ -44,6 +44,7 @@ export class UserRouteConfigurator implements IConfigurator, ISecureDecoratorPro
             if (!this.userStatusRepository.hasSession(sessionId)) {
                 return res.sendStatus(403);
             }
+            req.headers["X-USERID"] = this.userStatusRepository.getUserForSession(sessionId).id;
             return func(req, res, next);
         };
     }

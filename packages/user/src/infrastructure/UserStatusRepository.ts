@@ -30,4 +30,12 @@ export class UserStatusRepository {
         }
         return false;
     }
+
+    public getUserForSession(sessionId: SessionId): UserId {
+        for (const status of this.projections.values()) {
+            if (status.sessionId.equals(sessionId)) { return status.userId; }
+        }
+        throw new Error("Session Lost");
+    }
+
 }

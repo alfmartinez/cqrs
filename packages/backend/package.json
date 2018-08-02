@@ -36,7 +36,8 @@
     "http": "^0.0.0",
     "morgan": "^1.9.0",
     "@cqrs-alf/common": "1.0.0",
-    "@fubattle/user": "1.0.0"
+    "@fubattle/user": "1.0.0",
+    "@fubattle/character": "1.0.0"
   },
   "jest": {
     "collectCoverage": true,
