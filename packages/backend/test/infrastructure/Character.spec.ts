@@ -1,6 +1,6 @@
 import {Server} from "../../src/infrastructure/Server";
 import * as request from "supertest";
-import {CharacterClass} from "@fubattle/character";
+import {CharacterClass, CharacterId} from "@fubattle/character";
 
 describe("Character Routes", () => {
     const app = Server.bootstrap().app;
@@ -9,7 +9,7 @@ describe("Character Routes", () => {
     const name = "Pickle Rick";
     const className = CharacterClass.WIZARD;
 
-    let context: { userId?: string, sessionId?: string };
+    let context: { userId?: string, sessionId?: string, characterId?: CharacterId };
 
     function createUser(app, username, password) {
         return request(app).post('/api/users')
@@ -94,7 +94,11 @@ describe("Character Routes", () => {
 
     function createCharacterAndReturnId() {
         return createCharacter(app, username, password)
-            .then(response => response.body.id);
+            .then(response => {
+                const {id} = response.body;
+                context.characterId = id;
+                return id;
+            });
     }
 
     describe("Get Character", () => {
@@ -121,7 +125,7 @@ describe("Character Routes", () => {
         it("should return 403 if character is not owned by user", () => {
             return createCharacterAndReturnId()
                 .then(characterId => {
-                    return login(app,"foo","other")
+                    return login(app, "foo", "other")
                         .then(() => characterId);
                 })
                 .then(characterId => request(app)
@@ -132,7 +136,7 @@ describe("Character Routes", () => {
                     .expect(403));
         });
 
-        it("should return view of character if owned by user", () => {
+        it("should return 403 if character is not owned by user", () => {
             return createCharacterAndReturnId()
                 .then(characterId => request(app)
                     .get("/api/characters/" + characterId)
@@ -141,11 +145,125 @@ describe("Character Routes", () => {
                     .set("Authorization", context.sessionId)
                     .expect(200))
                 .then(response => {
-                    expect(response.body).toHaveProperty("name",name);
-                    expect(response.body).toHaveProperty("className",CharacterClass.WIZARD);
-                    expect(response.body).toHaveProperty("exp",0);
-                    expect(response.body).toHaveProperty("level",1);
+                    const view = response.body;
+                    expect(view).toHaveProperty("name", name);
+                    expect(view).toHaveProperty("exp", 0);
+                    expect(view).toHaveProperty("className", className);
                 });
         });
-    })
+    });
+
+    describe("Gain Experience", () => {
+
+        it("should return 404 if character not found", () => {
+            return createCharacterAndReturnId()
+                .then(characterId => request(app)
+                    .post('/api/characters/foo/experience')
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .send({amount: 1})
+                    .expect(404));
+        });
+
+        it("should return 400 if no amount given", () => {
+            return createCharacterAndReturnId()
+                .then(characterId => request(app)
+                    .post('/api/characters/' + characterId + '/experience')
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .expect(400));
+        });
+
+        it("should return 201 if amount given", () => {
+            return createCharacterAndReturnId()
+                .then(characterId => request(app)
+                    .post('/api/characters/' + characterId + '/experience')
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .send({amount: 1})
+                    .expect(201))
+                .then(() => request(app)
+                    .get('/api/characters/' + context.characterId)
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .expect(200)
+                    .then(response => {
+                        const view = response.body
+                        expect(view).toHaveProperty("exp", 1);
+                        expect(view).toHaveProperty("level", 1);
+                    }))
+
+        });
+
+        it("should return 201 if amount given : near level", () => {
+            return createCharacterAndReturnId()
+                .then(characterId => request(app)
+                    .post('/api/characters/' + characterId + '/experience')
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .send({amount: 999})
+                    .expect(201))
+                .then(() => request(app)
+                    .get('/api/characters/' + context.characterId)
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .expect(200)
+                    .then(response => {
+                        const view = response.body
+                        expect(view).toHaveProperty("exp", 999);
+                        expect(view).toHaveProperty("level", 1);
+                    }));
+        });
+
+
+        it("should return 201 if amount given : level exact", () => {
+            return createCharacterAndReturnId()
+                .then(characterId => request(app)
+                    .post('/api/characters/' + characterId + '/experience')
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .send({amount: 1000})
+                    .expect(201))
+                .then(() => request(app)
+                    .get('/api/characters/' + context.characterId)
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .expect(200)
+                    .then(response => {
+                        const view = response.body
+                        expect(view).toHaveProperty("exp", 1000);
+                        expect(view).toHaveProperty("level", 2);
+                    }));
+        });
+
+        it("should return 201 if amount given : multilevel", () => {
+            return createCharacterAndReturnId()
+                .then(characterId => request(app)
+                    .post('/api/characters/' + characterId + '/experience')
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .send({amount: 3000})
+                    .expect(201))
+                .then(() => request(app)
+                    .get('/api/characters/' + context.characterId)
+                    .set("Content-Type", "application/json")
+                    .set('Accept', 'application/json')
+                    .set("Authorization", context.sessionId)
+                    .expect(200)
+                    .then(response => {
+                        const view = response.body
+                        expect(view).toHaveProperty("exp", 3000);
+                        expect(view).toHaveProperty("level", 3);
+                    }));
+        });
+    });
 })

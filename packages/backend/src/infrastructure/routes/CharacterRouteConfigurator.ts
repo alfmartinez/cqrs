@@ -1,5 +1,5 @@
 import {EventPublisher, EventStore} from "@cqrs-alf/common";
-import {Character, CharacterId, CharacterRepository, createCharacter} from "@fubattle/character";
+import {Character, CharacterId, CharacterRepository, createCharacter, UnknownCharacter} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
 import {NextFunction, Request, Response, Router} from "express";
 import {ActionDecorator, IConfigurator} from "./index";
@@ -16,6 +16,7 @@ export class CharacterRouteConfigurator implements IConfigurator {
     public configureRoutes(router: Router, secure: ActionDecorator): void {
         router.post("/api/characters", secure(this.create));
         router.get("/api/characters/:id", secure(this.getCharacter));
+        router.post("/api/characters/:id/experience", secure(this.gainExperience));
     }
 
     private create = (req: Request, res: Response, next: NextFunction) => {
@@ -31,20 +32,55 @@ export class CharacterRouteConfigurator implements IConfigurator {
     }
 
     private getCharacter = (req: Request, res: Response, next: NextFunction) => {
-        const userId = new UserId(req.headers["X-USERID"] as string);
-        const characterId = new CharacterId(req.params.id);
         let character: Character;
         try {
-            character = this.characterRepository.getCharacter(characterId);
+            character = this.getCharacterFromRepository(req);
         } catch(e) {
-            return res.sendStatus(404);
+            return this.handleCharacterExceptions(e, res);
         }
+
+        res.send(character.getView());
+    }
+
+    private handleCharacterExceptions(e: Error, res: Response) {
+        switch(e.name) {
+            case "UnknownCharacter":
+                res.sendStatus(404);
+            case "CharacterNotOwnedByUser":
+                res.sendStatus(403);
+            default:
+                res.status(500).send(e);
+        }
+    }
+
+    private gainExperience = (req: Request, res: Response, next: NextFunction) => {
+        const {amount} = req.body;
+        if (!amount) {
+            return res.sendStatus(400);
+        }
+        try {
+            const character: Character = this.getCharacterFromRepository(req);
+            character.gainExperience(this.publishEvent, amount);
+            res.sendStatus(201);
+        } catch(e) {
+            this.handleCharacterExceptions(e, res);
+        }
+    }
+
+    private getCharacterFromRepository(req: Request) {
+        const userId = new UserId(req.headers["X-USERID"] as string);
+        const characterId = new CharacterId(req.params.id);
+        const character: Character = this.characterRepository.getCharacter(characterId);
         const view = character.getView();
         if (!view.userId.equals(userId)) {
-            return res.sendStatus(403);
+            throw new CharacterNotOwnedByUser();
         }
-        res.send(view);
-
+        return character;
     }
+}
+
+class CharacterNotOwnedByUser implements Error {
+    message: string = "Character is not owned by user";
+    name: string = "CharacterNotOwnedByUser";
 
 }
