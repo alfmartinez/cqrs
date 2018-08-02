@@ -9,7 +9,7 @@ export interface IConfigurator {
     configureRoutes(router: Router, secure: ActionDecorator): void;
 }
 
-type ActionFunction = (req: Request, res: Response, next: NextFunction) => void;
+export type ActionFunction = (req: Request, res: Response, next: NextFunction) => void;
 export type ActionDecorator = (action: ActionFunction) => ActionFunction;
 
 export class RouteConfigurator {
@@ -40,21 +40,7 @@ export class RouteConfigurator {
     }
 
     public configure(router: Router) {
-        if (this.configurator) this.configurator.configureRoutes(router, this.secure);
-    }
-
-
-
-    private secure = (func: ActionFunction): ActionFunction => {
-        return (req: Request, res: Response, next: NextFunction) => {
-            if (!req.headers.authorization) {
-                return res.sendStatus(401);
-            }
-            const sessionId = new SessionId(req.headers.authorization as string);
-            if (!this.userStatusRepository.hasSession(sessionId)) {
-                return res.sendStatus(403);
-            }
-            return func(req, res, next);
-        };
+        const secure = this.configurator.secure;
+        if (this.configurator) this.configurator.configureRoutes(router, secure);
     }
 }

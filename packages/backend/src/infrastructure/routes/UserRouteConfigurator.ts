@@ -1,5 +1,13 @@
-import {ActionDecorator, IConfigurator} from "./index";
-import {createUser, UpdateUserStatus, User, UserId, UserRepository, UserStatusRepository} from "../../../../user/dist";
+import {ActionDecorator, ActionFunction, IConfigurator} from "./index";
+import {
+    createUser,
+    SessionId,
+    UpdateUserStatus,
+    User,
+    UserId,
+    UserRepository,
+    UserStatusRepository
+} from "../../../../user/dist";
 import {EventStore, EventPublisher} from "@cqrs-alf/common";
 import {NextFunction, Request, Response, Router} from "express";
 
@@ -72,5 +80,18 @@ export class UserRouteConfigurator implements IConfigurator {
     public listUsers = (req: Request, res: Response, next: NextFunction) => {
         const userStatuses = this.userStatusRepository.getStatuses();
         return res.json(userStatuses);
+    }
+
+    public secure = (func: ActionFunction): ActionFunction => {
+        return (req: Request, res: Response, next: NextFunction) => {
+            if (!req.headers.authorization) {
+                return res.sendStatus(401);
+            }
+            const sessionId = new SessionId(req.headers.authorization as string);
+            if (!this.userStatusRepository.hasSession(sessionId)) {
+                return res.sendStatus(403);
+            }
+            return func(req, res, next);
+        };
     }
 }
