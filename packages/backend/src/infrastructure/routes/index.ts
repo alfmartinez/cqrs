@@ -1,7 +1,7 @@
 import {EventPublisher, EventStore} from "@cqrs-alf/common";
 import {NextFunction, Request, Response, Router} from "express";
-import {UserRouteConfigurator} from "./UserRouteConfigurator";
 import {CharacterRouteConfigurator} from "./CharacterRouteConfigurator";
+import {UserRouteConfigurator} from "./UserRouteConfigurator";
 
 export interface IConfigurator {
     configureRoutes(router: Router, secure: ActionDecorator): void;

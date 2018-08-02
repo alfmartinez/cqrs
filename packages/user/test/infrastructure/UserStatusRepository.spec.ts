@@ -35,5 +35,16 @@ describe("UserStatusRepository", () => {
 
         expect(repository.hasSession(new SessionId("baz"))).toBe(false);
         expect(repository.hasSession(sessionId)).toBe(true);
+    });
+
+    it("should tell userId if a session exists for given id", () => {
+        repository.save(status);
+        expect(repository.getUserForSession(sessionId)).toBe(userId);
+    });
+
+    it("should throw if asked for userId and session lost", () => {
+        repository.save(status);
+        expect(() => repository.getUserForSession(new SessionId("baz")))
+            .toThrow("Session Lost");
     })
 })

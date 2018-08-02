@@ -1,17 +1,17 @@
-import {ActionDecorator, IConfigurator} from "./index";
-import {NextFunction, Request, Response, Router} from "express";
 import {EventPublisher, EventStore} from "@cqrs-alf/common";
 import {createCharacter} from "@fubattle/character";
 import {UserId} from "@fubattle/user";
+import {NextFunction, Request, Response, Router} from "express";
+import {ActionDecorator, IConfigurator} from "./index";
 
-export class CharacterRouteConfigurator implements IConfigurator{
+export class CharacterRouteConfigurator implements IConfigurator {
     private publishEvent: (event: any) => void;
 
     constructor(store: EventStore, eventPublisher: EventPublisher) {
         this.publishEvent = eventPublisher.publish;
     }
 
-    configureRoutes(router: Router, secure: ActionDecorator): void {
+    public configureRoutes(router: Router, secure: ActionDecorator): void {
         router.post("/api/characters", secure(this.create));
     }
 
@@ -26,6 +26,6 @@ export class CharacterRouteConfigurator implements IConfigurator{
 
         res.status(201).send(characterId);
 
-    };
+    }
 
 }
