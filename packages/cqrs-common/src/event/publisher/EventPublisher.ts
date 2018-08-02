@@ -3,7 +3,7 @@ import {EventEmitter} from "events";
 export class EventPublisher {
     public eventEmitter = new EventEmitter();
 
-    public publish = (event: any) => {
+    public publish = (event: any): void => {
         this.eventEmitter.emit("*", event);
         const eventName = event.constructor.name;
         this.eventEmitter.emit(eventName, event);

@@ -92,7 +92,7 @@ export class User {
         return this.projection.state;
     }
 
-    public login(publishEvent: (evt: any) => any, password: string): SessionId {
+    public login(publishEvent: (evt: any) => void, password: string): SessionId {
         if (password !== this.projection.state.password) {
             throw new AuthenticationError("Authentication failed");
         }
@@ -104,14 +104,14 @@ export class User {
         return sessionId;
     }
 
-    public logout(publishEvent: (evt: any) => any): void {
+    public logout(publishEvent: (evt: any) => void): void {
         const {userId, sessionId} = this.projection.state;
         const sessionClosed = new SessionClosed(userId, sessionId);
         publishEvent(sessionClosed);
     }
 }
 
-export function createUser(publishEvent: (evt: any) => any, username: string, password: string) {
+export function createUser(publishEvent: (evt: any) => void, username: string, password: string) {
     const userId = new UserId(IdGenerator.generate());
     publishEvent(new UserCreated(userId, username, password));
     return userId;
