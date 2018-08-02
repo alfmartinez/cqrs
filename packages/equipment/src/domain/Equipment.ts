@@ -1,4 +1,4 @@
-import {IAggregable, DecisionProjection} from "@cqrs-alf/common";
+import {DecisionProjection, IAggregable} from "@cqrs-alf/common";
 import {CharacterClass, CharacterCreated, CharacterId} from "@fubattle/character";
 import {Item} from "./Item";
 import {createItemSet} from "./ItemSet";

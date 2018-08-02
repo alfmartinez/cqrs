@@ -2,6 +2,12 @@ import {EventPublisher, EventStore} from "@cqrs-alf/common";
 import {createUser, SessionId, UpdateUserStatus, User, UserId} from "@fubattle/user";
 import {UserRepository, UserStatusRepository} from "@fubattle/user";
 import {NextFunction, Request, Response, Router} from "express";
+import {UserRouteConfigurator} from "./UserRouteConfigurator";
+import {Router} from "express";
+
+interface IConfigurator {
+
+}
 
 export class RouteConfigurator {
 
@@ -13,6 +19,8 @@ export class RouteConfigurator {
         configurator.bootstrapInfrastructure();
         configurator.configure(router);
     }
+
+    private configurator : IConfigurator = new UserRouteConfigurator();
 
     private store: EventStore = new EventStore();
     private eventPublisher: EventPublisher = new EventPublisher();
@@ -28,14 +36,18 @@ export class RouteConfigurator {
     }
 
     public configure(router: Router) {
+        this.configureRoutes(router, this.secure);
+    }
+
+    private configureRoutes(router: Router, secure) {
         // Public routes
         router.post("/api/users", this.createUser);
         router.post("/api/users/:id/login", this.login);
 
         // Secured routes
-        router.get("/api/users", this.secure(this.listUsers));
-        router.get("/api/users/:id", this.secure(this.getUser));
-        router.post("/api/users/:id/logout", this.secure(this.logout));
+        router.get("/api/users", secure(this.listUsers));
+        router.get("/api/users/:id", secure(this.getUser));
+        router.post("/api/users/:id/logout", secure(this.logout));
     }
 
     public createUser = (req: Request, res: Response, next: NextFunction) => {
@@ -85,7 +97,8 @@ export class RouteConfigurator {
         return res.json(userStatuses);
     }
 
-    private secure(func: (req: Request, res: Response, next: NextFunction) => void) {
+    private secure = (func: (req: Request, res: Response, next: NextFunction) => void)
+        : (req: Request, res: Response, next: NextFunction) => void  => {
         return (req: Request, res: Response, next: NextFunction) => {
             if (!req.headers.authorization) {
                 return res.sendStatus(401);

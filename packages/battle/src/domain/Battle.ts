@@ -1,4 +1,4 @@
-import {IAggregable, DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
+import {DecisionProjection, IAggregable, IdGenerator, ValueType} from "@cqrs-alf/common";
 
 export class BattleId extends ValueType {
     public battleId: string;

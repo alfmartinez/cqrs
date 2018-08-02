@@ -1,4 +1,4 @@
-import {IAggregable, DecisionProjection, IdGenerator, ValueType} from "@cqrs-alf/common";
+import {DecisionProjection, IAggregable, IdGenerator, ValueType} from "@cqrs-alf/common";
 import {CharacterId} from "@fubattle/character";
 
 export class TeamId extends ValueType {
