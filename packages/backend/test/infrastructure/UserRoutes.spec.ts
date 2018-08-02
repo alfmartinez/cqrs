@@ -2,7 +2,7 @@ import * as request from "supertest";
 import {Server} from "../../src/infrastructure/Server";
 
 
-describe("Backend Server", () => {
+describe("UserRoutes", () => {
     const app = Server.bootstrap().app;
     const password = "foo";
     const wrongPassword = "bar";

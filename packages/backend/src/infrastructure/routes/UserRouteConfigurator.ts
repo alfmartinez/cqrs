@@ -1,4 +1,4 @@
-import {ActionDecorator, ActionFunction, IConfigurator, ISecureDecoratorProvider} from "./index";
+import {EventPublisher, EventStore} from "@cqrs-alf/common";
 import {
     createUser,
     SessionId,
@@ -6,10 +6,10 @@ import {
     User,
     UserId,
     UserRepository,
-    UserStatusRepository
+    UserStatusRepository,
 } from "@fubattle/user";
-import {EventStore, EventPublisher} from "@cqrs-alf/common";
 import {NextFunction, Request, Response, Router} from "express";
+import {ActionDecorator, ActionFunction, IConfigurator, ISecureDecoratorProvider} from "./index";
 
 export class UserRouteConfigurator implements IConfigurator, ISecureDecoratorProvider {
     private readonly publishEvent: (evt: any) => void;
@@ -33,6 +33,19 @@ export class UserRouteConfigurator implements IConfigurator, ISecureDecoratorPro
         router.get("/api/users", secure(this.listUsers));
         router.get("/api/users/:id", secure(this.getUser));
         router.post("/api/users/:id/logout", secure(this.logout));
+    }
+
+    public secure = (func: ActionFunction): ActionFunction => {
+        return (req: Request, res: Response, next: NextFunction) => {
+            if (!req.headers.authorization) {
+                return res.sendStatus(401);
+            }
+            const sessionId = new SessionId(req.headers.authorization as string);
+            if (!this.userStatusRepository.hasSession(sessionId)) {
+                return res.sendStatus(403);
+            }
+            return func(req, res, next);
+        };
     }
 
     private createUser = (req: Request, res: Response, next: NextFunction) => {
@@ -80,18 +93,5 @@ export class UserRouteConfigurator implements IConfigurator, ISecureDecoratorPro
     private listUsers = (req: Request, res: Response, next: NextFunction) => {
         const userStatuses = this.userStatusRepository.getStatuses();
         return res.json(userStatuses);
-    }
-
-    public secure = (func: ActionFunction): ActionFunction => {
-        return (req: Request, res: Response, next: NextFunction) => {
-            if (!req.headers.authorization) {
-                return res.sendStatus(401);
-            }
-            const sessionId = new SessionId(req.headers.authorization as string);
-            if (!this.userStatusRepository.hasSession(sessionId)) {
-                return res.sendStatus(403);
-            }
-            return func(req, res, next);
-        };
     }
 }

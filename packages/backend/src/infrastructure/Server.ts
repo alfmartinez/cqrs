@@ -64,7 +64,7 @@ export class Server {
      */
     public config() {
         // mount logger
-        this.app.use(logger("dev"));
+        //athis.app.use(logger("dev"));
 
         // mount json form parser
         this.app.use(bodyParser.json());

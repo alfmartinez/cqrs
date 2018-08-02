@@ -16,9 +16,6 @@ export type ActionDecorator = (action: ActionFunction) => ActionFunction;
 export class RouteConfigurator {
 
     public static create(router: Router) {
-        // log
-        console.info("[RouteConfigurator::create] Creating route configurator.");
-
         const configurator = new RouteConfigurator();
         configurator.configure(router);
     }
@@ -36,6 +33,6 @@ export class RouteConfigurator {
 
     public configure(router: Router) {
         const secure = this.userRouteConfigurator.secure;
-        if (this.userRouteConfigurator) this.userRouteConfigurator.configureRoutes(router, secure);
+        this.userRouteConfigurator.configureRoutes(router, secure);
     }
 }
