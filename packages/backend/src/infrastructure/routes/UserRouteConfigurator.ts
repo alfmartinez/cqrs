@@ -1,4 +1,4 @@
-import {ActionDecorator, ActionFunction, IConfigurator} from "./index";
+import {ActionDecorator, ActionFunction, IConfigurator, ISecureDecoratorProvider} from "./index";
 import {
     createUser,
     SessionId,
@@ -7,12 +7,12 @@ import {
     UserId,
     UserRepository,
     UserStatusRepository
-} from "../../../../user/dist";
+} from "@fubattle/user";
 import {EventStore, EventPublisher} from "@cqrs-alf/common";
 import {NextFunction, Request, Response, Router} from "express";
 
-export class UserRouteConfigurator implements IConfigurator {
-    private publishEvent: (evt: any) => void;
+export class UserRouteConfigurator implements IConfigurator, ISecureDecoratorProvider {
+    private readonly publishEvent: (evt: any) => void;
     private userRepository: UserRepository;
     private updateUserStatus: UpdateUserStatus;
     private userStatusRepository: UserStatusRepository = new UserStatusRepository();
@@ -35,7 +35,7 @@ export class UserRouteConfigurator implements IConfigurator {
         router.post("/api/users/:id/logout", secure(this.logout));
     }
 
-    public createUser = (req: Request, res: Response, next: NextFunction) => {
+    private createUser = (req: Request, res: Response, next: NextFunction) => {
         const {username, password} = req.body;
         if (!username || !password) {
             return res.sendStatus(400);
@@ -46,7 +46,7 @@ export class UserRouteConfigurator implements IConfigurator {
             .json(userId);
     }
 
-    public getUser = (req: Request, res: Response, next: NextFunction) => {
+    private getUser = (req: Request, res: Response, next: NextFunction) => {
         const userId = new UserId(req.params.id);
         // @ts-ignore
         const user: User = this.userRepository.getUser(userId);
@@ -55,7 +55,7 @@ export class UserRouteConfigurator implements IConfigurator {
         res.json(view);
     }
 
-    public login = (req: Request, res: Response, next: NextFunction) => {
+    private login = (req: Request, res: Response, next: NextFunction) => {
         const userId = new UserId(req.params.id);
         const password = req.body.password;
         try {
@@ -69,7 +69,7 @@ export class UserRouteConfigurator implements IConfigurator {
 
     }
 
-    public logout = (req: Request, res: Response, next: NextFunction) => {
+    private logout = (req: Request, res: Response, next: NextFunction) => {
         const userId = new UserId(req.params.id);
         // @ts-ignore
         const user: User = this.userRepository.getUser(userId);
@@ -77,7 +77,7 @@ export class UserRouteConfigurator implements IConfigurator {
         res.sendStatus(205);
     }
 
-    public listUsers = (req: Request, res: Response, next: NextFunction) => {
+    private listUsers = (req: Request, res: Response, next: NextFunction) => {
         const userStatuses = this.userStatusRepository.getStatuses();
         return res.json(userStatuses);
     }
