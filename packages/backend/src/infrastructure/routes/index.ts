@@ -9,6 +9,9 @@ interface IConfigurator {
 
 }
 
+type ActionFunction = (req: Request, res: Response, next: NextFunction) => void;
+type ActionDecorator = (action: ActionFunction) => ActionFunction;
+
 export class RouteConfigurator {
 
     public static create(router: Router) {
@@ -39,7 +42,7 @@ export class RouteConfigurator {
         this.configureRoutes(router, this.secure);
     }
 
-    private configureRoutes(router: Router, secure) {
+    private configureRoutes(router: Router, secure: ActionDecorator) {
         // Public routes
         router.post("/api/users", this.createUser);
         router.post("/api/users/:id/login", this.login);
@@ -97,8 +100,7 @@ export class RouteConfigurator {
         return res.json(userStatuses);
     }
 
-    private secure = (func: (req: Request, res: Response, next: NextFunction) => void)
-        : (req: Request, res: Response, next: NextFunction) => void  => {
+    private secure = (func: ActionFunction): ActionFunction => {
         return (req: Request, res: Response, next: NextFunction) => {
             if (!req.headers.authorization) {
                 return res.sendStatus(401);
